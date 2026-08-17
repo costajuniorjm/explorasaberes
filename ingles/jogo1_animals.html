@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 1: Animals & Nayo's Submarine</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #0c2461; color: #fff; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: #1e3799; padding: 25px; border-radius: 14px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); border-top: 6px solid #4a69bd; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #4a69bd; }
+        .btn-back { background: #e55039; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #b71540; }
+        h1 { color: #f8c291; font-size: 1.8rem; }
+
+        .section-box { background: #0a3d62; border: 2px solid #60a3bc; border-radius: 12px; padding: 20px; margin-bottom: 25px; }
+        .section-title { font-size: 1.3rem; color: #f6b93b; margin-bottom: 15px; font-weight: bold; }
+        .instructions { background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; margin-bottom: 15px; color: #dff9fb; font-size: 0.95rem; }
+
+        /* --- NAYO'S SUBMARINE GAME --- */
+        .ocean-stage { display: flex; gap: 20px; align-items: stretch; background: linear-gradient(180deg, #82ccdd 0%, #60a3bc 25%, #3c6382 60%, #0a3d62 100%); border-radius: 12px; padding: 15px; border: 3px solid #78e08f; min-height: 450px; }
+        .depth-gauge { width: 150px; border-right: 3px dashed #fff; position: relative; display: flex; flex-direction: column; justify-content: space-between; padding: 10px 5px; }
+        .surface-marker { background: #f6b93b; color: #000; font-weight: bold; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; text-align: center; }
+        .depth-marker { color: #dff9fb; font-size: 0.85rem; font-weight: bold; text-align: center; }
+        
+        .sub-track { position: absolute; left: 10px; top: 35px; bottom: 35px; width: 80px; }
+        #submarine-wrap { position: absolute; bottom: 0; left: 0; display: flex; flex-direction: column; align-items: center; transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); }
+        .nayo-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background: #fff; border: 2px solid #f6b93b; margin-bottom: -10px; z-index: 2; }
+        .sub-icon { font-size: 2.4rem; z-index: 1; line-height: 1; }
+        .sub-label { font-size: 0.75rem; font-weight: bold; color: #fff; background: #e55039; padding: 2px 6px; border-radius: 4px; display: block; margin-top: 2px; }
+
+        .quiz-panel { flex: 1; display: flex; flex-direction: column; justify-content: center; background: rgba(0,0,0,0.3); padding: 20px; border-radius: 10px; }
+        .sea-animal-card { text-align: center; }
+        
+        .sea-animal-display { width: 160px; height: 140px; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.12); border-radius: 12px; border: 2px solid #60a3bc; overflow: hidden; padding: 5px; }
+        .sea-animal-display img { width: 100%; height: 100%; object-fit: contain; }
+        .sea-animal-display .emoji-large { font-size: 4.8rem; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+
+        .sea-prompt { font-size: 1.3rem; font-weight: bold; color: #f8c291; margin-bottom: 20px; }
+        
+        .sea-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .sea-opt-btn { background: #4a69bd; color: white; border: 2px solid #6a89cc; padding: 14px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .sea-opt-btn:hover { background: #1e3799; border-color: #f6b93b; transform: scale(1.02); }
+        .sea-opt-btn.correct { background: #78e08f !important; color: #000; }
+        .sea-opt-btn.wrong { background: #e55039 !important; color: #fff; }
+
+        /* --- DESAFIO 2: MATCH THE SYLLABLES --- */
+        .grid-2col { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
+        .syl-item { background: #1e3799; padding: 12px 15px; border-radius: 8px; border: 1px solid #4a69bd; display: flex; align-items: center; justify-content: space-between; font-size: 1.1rem; font-weight: bold; }
+        .syl-item select { padding: 8px 12px; border-radius: 6px; border: 2px solid #60a3bc; font-weight: bold; color: #0a3d62; background: #fff; font-size: 1rem; }
+
+        /* --- DESAFIO 3: UNSCRAMBLE ANIMAL SYLLABLES --- */
+        .unscramble-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+        .unscramble-card { background: #1e3799; border: 2px solid #4a69bd; border-radius: 10px; padding: 15px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .animal-emoji-header { font-size: 2.8rem; margin-bottom: 8px; }
+        
+        .syllables-pool { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; justify-content: center; }
+        .syl-btn { background: #f6b93b; color: #0a3d62; font-weight: bold; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: all 0.15s; }
+        .syl-btn:hover { background: #fa983a; transform: translateY(-2px); }
+        .syl-btn.used { opacity: 0.3; pointer-events: none; }
+
+        .answer-box { background: #0a3d62; border: 2px dashed #60a3bc; border-radius: 6px; width: 100%; min-height: 45px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 5px; margin-bottom: 10px; font-weight: bold; font-size: 1.1rem; color: #78e08f; }
+        .btn-clear-word { background: #e55039; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; font-weight: bold; }
+
+        .btn-check-all { background: #78e08f; color: #0a3d62; border: none; padding: 14px 25px; font-size: 1.15rem; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 20px; transition: background 0.2s; }
+        .btn-check-all:hover { background: #38ada9; color: white; }
+        .result-box { margin-top: 15px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>🌊 Jogo 1: Animals & Nayo's Submarine</h1>
+        <a href="index_ingles.html" class="btn-back">⬅ Voltar ao Portal de Inglês</a>
+    </div>
+
+    <!-- DESAFIO 1: SUBMARINO DO NAYO -->
+    <div class="section-box">
+        <div class="section-title">🚢 Desafio 1: O Submarino do Nayo (Sea Life Mission)</div>
+        <div class="instructions">
+            O personagem <strong>Nayo</strong> precisa identificar as criaturas marinhas para subir com seu submarino! A cada acerto, o submarino sobe até atingir a superfície! 🌊
+        </div>
+
+        <div class="ocean-stage">
+            <div class="depth-gauge">
+                <div class="surface-marker">☀️ Surface (0m)</div>
+                <div class="sub-track">
+                    <div id="submarine-wrap">
+                        <img src="../img/ingles/Nayo.png" alt="Nayo" class="nayo-avatar" onerror="this.style.display='none'">
+                        <span class="sub-icon">🛥️</span>
+                        <span class="sub-label">Nayo</span>
+                    </div>
+                </div>
+                <div class="depth-marker">Depth: <span id="depth-val">100m</span></div>
+            </div>
+
+            <div class="quiz-panel" id="sea-quiz-panel">
+                <div class="sea-animal-card">
+                    <div class="sea-animal-display" id="sea-display"></div>
+                    <div class="sea-prompt" id="sea-prompt">What sea creature is this?</div>
+                    <div class="sea-options" id="sea-options"></div>
+                    <div id="sub-feedback" style="margin-top: 15px; font-weight: bold; font-size: 1.1rem;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DESAFIO 2: MATCH THE SYLLABLES -->
+    <div class="section-box">
+        <div class="section-title">🧩 Desafio 2: Match the Syllables (Página da Apostila)</div>
+        <div class="instructions">
+            Conecte o início de cada palavra à sua respectiva terminação correta:
+        </div>
+
+        <div class="grid-2col">
+            <div class="syl-item" id="sbox-1">
+                <span>1. <strong>OC-</strong> ...</span>
+                <select id="syl-1" data-correct="TOPUS">
+                    <option value="">[ ? ]</option>
+                    <option value="PPOTAMUS">PPOTAMUS</option>
+                    <option value="TOPUS">TOPUS</option>
+                    <option value="RAFFE">RAFFE</option>
+                    <option value="LE">LE</option>
+                </select>
+            </div>
+
+            <div class="syl-item" id="sbox-2">
+                <span>2. <strong>GI-</strong> ...</span>
+                <select id="syl-2" data-correct="RAFFE">
+                    <option value="">[ ? ]</option>
+                    <option value="RAFFE">RAFFE</option>
+                    <option value="PHANT">PHANT</option>
+                    <option value="LE">LE</option>
+                    <option value="NA">NA</option>
+                </select>
+            </div>
+
+            <div class="syl-item" id="sbox-3">
+                <span>3. <strong>WHA-</strong> ...</span>
+                <select id="syl-3" data-correct="LE">
+                    <option value="">[ ? ]</option>
+                    <option value="NA">NA</option>
+                    <option value="LE">LE</option>
+                    <option value="TOPUS">TOPUS</option>
+                    <option value="PPOTAMUS">PPOTAMUS</option>
+                </select>
+            </div>
+
+            <div class="syl-item" id="sbox-4">
+                <span>4. <strong>HIPO-</strong> ...</span>
+                <select id="syl-4" data-correct="PPOTAMUS">
+                    <option value="">[ ? ]</option>
+                    <option value="PPOTAMUS">PPOTAMUS</option>
+                    <option value="PHANT">PHANT</option>
+                    <option value="RAFFE">RAFFE</option>
+                    <option value="TOPUS">TOPUS</option>
+                </select>
+            </div>
+
+            <div class="syl-item" id="sbox-5">
+                <span>5. <strong>ELE-</strong> ...</span>
+                <select id="syl-5" data-correct="PHANT">
+                    <option value="">[ ? ]</option>
+                    <option value="PHANT">PHANT</option>
+                    <option value="LE">LE</option>
+                    <option value="NA">NA</option>
+                    <option value="RAFFE">RAFFE</option>
+                </select>
+            </div>
+
+            <div class="syl-item" id="sbox-6">
+                <span>6. <strong>IGUA-</strong> ...</span>
+                <select id="syl-6" data-correct="NA">
+                    <option value="">[ ? ]</option>
+                    <option value="NA">NA</option>
+                    <option value="TOPUS">TOPUS</option>
+                    <option value="PPOTAMUS">PPOTAMUS</option>
+                    <option value="LE">LE</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="btn-check-all" onclick="checkSyllablesOnly()">Verificar Conexão das Sílabas 🏆</button>
+        <div id="syl-res" class="result-box"></div>
+    </div>
+
+    <!-- DESAFIO 3: TODOS OS ANIMAIS EM QUEBRA-CABEÇA DE SÍLABAS -->
+    <div class="section-box">
+        <div class="section-title">🦁 Desafio 3: Organizando as Sílabas de Todos os Animais (Zoo & Terrestres)</div>
+        <div class="instructions">
+            Clique nas sílabas na ordem correta para montar o nome em inglês de cada um dos <strong>18 animais</strong> do material! As sílabas nunca vêm prontas.
+        </div>
+
+        <div class="unscramble-grid" id="unscramble-container"></div>
+
+        <button class="btn-check-all" onclick="checkAllWordPuzzles()">Verificar Todos os Nomes Formados 🏆</button>
+        <div id="puzzle-res" class="result-box"></div>
+    </div>
+</div>
+
+<script>
+    // --- 1. SUBMARINE: TODOS OS 16 ANIMAIS MARINHOS DA FONTE ---
+    const allSeaAnimals = [
+        { name: "Whale", img: "../img/ingles/whale.jpg", emoji: "🐳", opts: ["Whale", "Dolphin", "Eel", "Seal"] },
+        { name: "Dolphin", img: "../img/ingles/dolphin.jpg", emoji: "🐬", opts: ["Dolphin", "Shark", "Whale", "Squid"] },
+        { name: "Sea Turtle", img: "../img/ingles/sea_turtle.jpg", emoji: "🐢", opts: ["Sea Turtle", "Starfish", "Seahorse", "Lobster"] },
+        { name: "Lionfish", img: "../img/ingles/lionfish.png", emoji: "🐠", opts: ["Lionfish", "Sea Urchin", "Manta Ray", "Eel"] },
+        { name: "Shark", img: "../img/ingles/shark.jpg", emoji: "🦈", opts: ["Shark", "Seal", "Dolphin", "Whale"] },
+        { name: "Seal", img: "../img/ingles/seal.jpg", emoji: "🦭", opts: ["Seal", "Sea Turtle", "Starfish", "Shark"] },
+        { name: "Starfish", img: "../img/ingles/starfish.jpg", emoji: "⭐", opts: ["Starfish", "Sea Urchin", "Jellyfish", "Octopus"] },
+        { name: "Octopus", img: "../img/ingles/octopus.jpg", emoji: "🐙", opts: ["Octopus", "Squid", "Lobster", "Shrimp"] },
+        { name: "Seahorse", img: "../img/ingles/seahorse.png", emoji: "🌊", opts: ["Seahorse", "Eel", "Lionfish", "Seal"] },
+        { name: "Jellyfish", img: "../img/ingles/jellyfish.jpg", emoji: "🪼", opts: ["Jellyfish", "Octopus", "Squid", "Starfish"] },
+        { name: "Lobster", img: "../img/ingles/lobster.jpg", emoji: "🦞", opts: ["Lobster", "Shrimp", "Crab", "Octopus"] },
+        { name: "Eel", img: "../img/ingles/eel.jpg", emoji: "🐍", opts: ["Eel", "Shark", "Lionfish", "Seahorse"] },
+        { name: "Shrimp", img: "../img/ingles/shrimp.jpg", emoji: "🦐", opts: ["Shrimp", "Lobster", "Squid", "Sea Urchin"] },
+        { name: "Squid", img: "../img/ingles/squid.jpg", emoji: "🦑", opts: ["Squid", "Octopus", "Jellyfish", "Whale"] },
+        { name: "Manta Ray", img: "../img/ingles/manta_ray.jpg", svg: "manta", emoji: "🔷", opts: ["Manta Ray", "Lionfish", "Dolphin", "Shark"] },
+        { name: "Sea Urchin", img: "../img/ingles/sea_urchin.jpg", emoji: "🦔", opts: ["Sea Urchin", "Starfish", "Lionfish", "Shrimp"] }
+    ];
+
+    let currentSeaIdx = 0;
+    let subProgress = 0;
+    const step = 100 / allSeaAnimals.length;
+
+    function renderAnimalDisplay(q) {
+        const display = document.getElementById('sea-display');
+        display.innerHTML = "";
+
+        if (q.svg === "manta") {
+            display.innerHTML = `
+                <svg viewBox="0 0 100 80" width="100" height="80" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">
+                    <path d="M 50,10 C 65,30 95,25 95,40 C 95,48 70,55 55,60 C 53,75 50,80 50,80 C 50,80 47,75 45,60 C 30,55 5,48 5,40 C 5,25 35,30 50,10 Z" fill="#22a6b3" stroke="#dff9fb" stroke-width="2"/>
+                    <circle cx="45" cy="20" r="2.5" fill="#fff"/>
+                    <circle cx="55" cy="20" r="2.5" fill="#fff"/>
+                </svg>
+            `;
+            return;
+        }
+
+        const img = new Image();
+        img.src = q.img;
+        img.onload = () => {
+            display.innerHTML = `<img src="${q.img}" alt="${q.name}">`;
+        };
+        img.onerror = () => {
+            display.innerHTML = `<span class="emoji-large">${q.emoji}</span>`;
+        };
+    }
+
+    function loadSeaQuestion() {
+        if (currentSeaIdx >= allSeaAnimals.length) {
+            document.getElementById('sea-prompt').innerHTML = "🎉 PARABÉNS! Nayo identificou todos os animais marinhos e chegou à superfície! ☀️🛥️";
+            document.getElementById('sea-options').innerHTML = `<button class="sea-opt-btn" onclick="restartSubmarine()" style="grid-column: span 2;">Jogar Submarino Novamente 🔄</button>`;
+            document.getElementById('sea-display').innerHTML = `<span class="emoji-large">☀️</span>`;
+            return;
+        }
+
+        const q = allSeaAnimals[currentSeaIdx];
+        renderAnimalDisplay(q);
+        document.getElementById('sea-prompt').textContent = `What sea creature is this? (${currentSeaIdx + 1}/${allSeaAnimals.length})`;
+
+        const optionsContainer = document.getElementById('sea-options');
+        optionsContainer.innerHTML = "";
+        
+        const shuffled = [...q.opts].sort(() => 0.5 - Math.random());
+        shuffled.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'sea-opt-btn';
+            btn.textContent = opt;
+            btn.onclick = () => chooseSeaOption(btn, opt, q.name);
+            optionsContainer.appendChild(btn);
+        });
+
+        document.getElementById('sub-feedback').textContent = "";
+    }
+
+    function chooseSeaOption(btn, chosen, correct) {
+        const buttons = document.querySelectorAll('.sea-opt-btn');
+        buttons.forEach(b => b.disabled = true);
+
+        if (chosen === correct) {
+            btn.classList.add('correct');
+            document.getElementById('sub-feedback').textContent = "✨ Correct! Nayo está subindo!";
+            document.getElementById('sub-feedback').style.color = "#78e08f";
+
+            currentSeaIdx++;
+            subProgress = Math.min(100, subProgress + step);
+            updateSubPosition();
+
+            setTimeout(loadSeaQuestion, 1000);
+        } else {
+            btn.classList.add('wrong');
+            document.getElementById('sub-feedback').textContent = `❌ Oops! Era "${correct}". Continue tentando!`;
+            document.getElementById('sub-feedback').style.color = "#e55039";
+
+            currentSeaIdx++;
+            setTimeout(loadSeaQuestion, 1400);
+        }
+    }
+
+    function updateSubPosition() {
+        const subWrap = document.getElementById('submarine-wrap');
+        const depthVal = document.getElementById('depth-val');
+        
+        const remainingDepth = Math.round(Math.max(0, 100 - subProgress));
+        depthVal.textContent = remainingDepth + "m";
+        
+        const bottomPercent = Math.min(80, subProgress * 0.8);
+        subWrap.style.bottom = bottomPercent + "%";
+    }
+
+    function restartSubmarine() {
+        currentSeaIdx = 0;
+        subProgress = 0;
+        updateSubPosition();
+        loadSeaQuestion();
+    }
+
+    // --- 2. CHECK SYLLABLES ---
+    function checkSyllablesOnly() {
+        let score = 0;
+        let total = 6;
+
+        for (let i = 1; i <= total; i++) {
+            const sel = document.getElementById(`syl-${i}`);
+            const box = document.getElementById(`sbox-${i}`);
+            if (sel.value === sel.getAttribute('data-correct')) {
+                score++;
+                box.style.backgroundColor = '#10ac84';
+                box.style.borderColor = '#78e08f';
+            } else {
+                box.style.backgroundColor = '#ee5253';
+                box.style.borderColor = '#ff6b6b';
+            }
+        }
+
+        const res = document.getElementById('syl-res');
+        if (score === total) {
+            res.textContent = "🎉 PERFEITO! Todas as 6 sílabas conectadas corretamente!";
+            res.style.color = "#78e08f";
+        } else {
+            res.textContent = `❌ Você acertou ${score} de ${total}. Revise os itens em vermelho!`;
+            res.style.color = "#ff6b6b";
+        }
+    }
+
+    // --- 3. TODOS OS 18 ANIMAIS EM SÍLABAS DESORDENADAS ---
+    const allPuzzleAnimals = [
+        { emoji: "🐘", correct: "ELEPHANT", parts: ["ELE", "PHANT"] },
+        { emoji: "🦓", correct: "ZEBRA", parts: ["ZE", "BRA"] },
+        { emoji: "🐒", correct: "MONKEY", parts: ["MON", "KEY"] },
+        { emoji: "🦛", correct: "HIPOPPOTAMUS", parts: ["HI", "POP", "PO", "TA", "MUS"] },
+        { emoji: "🐻", correct: "BEAR", parts: ["BE", "AR"] },
+        { emoji: "🦩", correct: "FLAMINGO", parts: ["FLA", "MIN", "GO"] },
+        { emoji: "🦧", correct: "ORANGUTAN", parts: ["O", "RAN", "GU", "TAN"] },
+        { emoji: "🐅", correct: "TIGER", parts: ["TI", "GER"] },
+        { emoji: "🐪", correct: "CAMEL", parts: ["CA", "MEL"] },
+        { emoji: "🐊", correct: "CROCODILE", parts: ["CROC", "O", "DILE"] },
+        { emoji: "🐧", correct: "PENGUIN", parts: ["PEN", "GUIN"] },
+        { emoji: "🦙", correct: "LLAMA", parts: ["LLA", "MA"] },
+        { emoji: "🐼", correct: "PANDA", parts: ["PAN", "DA"] },
+        { emoji: "🐍", correct: "SNAKE", parts: ["SNA", "KE"] },
+        { emoji: "🦁", correct: "LION", parts: ["LI", "ON"] },
+        { emoji: "🐨", correct: "KOALA", parts: ["KO", "A", "LA"] },
+        { emoji: "🦒", correct: "GIRAFFE", parts: ["GI", "RAFFE"] },
+        { emoji: "🦎", correct: "IGUANA", parts: ["I", "GUA", "NA"] }
+    ];
+
+    let userFormedWords = {};
+
+    function getGuaranteedScrambled(originalParts) {
+        if (originalParts.length <= 1) return [...originalParts];
+        
+        let shuffled;
+        let attempts = 0;
+        const originalString = originalParts.join("");
+
+        do {
+            shuffled = [...originalParts].sort(() => 0.5 - Math.random());
+            attempts++;
+        } while (shuffled.join("") === originalString && attempts < 25);
+
+        if (shuffled.join("") === originalString) {
+            shuffled = [...originalParts].reverse();
+        }
+
+        return shuffled;
+    }
+
+    function initPuzzleCards() {
+        const container = document.getElementById('unscramble-container');
+        container.innerHTML = "";
+
+        allPuzzleAnimals.forEach((item, idx) => {
+            userFormedWords[idx] = [];
+
+            const card = document.createElement('div');
+            card.className = 'unscramble-card';
+            card.id = `pcard-${idx}`;
+
+            const scrambledParts = getGuaranteedScrambled(item.parts);
+
+            let buttonsHTML = "";
+            scrambledParts.forEach((part, pIdx) => {
+                buttonsHTML += `<button class="syl-btn" id="sbtn-${idx}-${pIdx}" onclick="addSyllable(${idx}, '${part}', this)">${part}</button>`;
+            });
+
+            card.innerHTML = `
+                <div class="animal-emoji-header">${item.emoji}</div>
+                <div class="syllables-pool">${buttonsHTML}</div>
+                <div class="answer-box" id="ansbox-${idx}">...</div>
+                <button class="btn-clear-word" onclick="clearWord(${idx})">Limpar ✖</button>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function addSyllable(cardIdx, syllable, btn) {
+        userFormedWords[cardIdx].push(syllable);
+        btn.classList.add('used');
+        updateAnswerBox(cardIdx);
+    }
+
+    function clearWord(cardIdx) {
+        userFormedWords[cardIdx] = [];
+        const card = document.getElementById(`pcard-${cardIdx}`);
+        const buttons = card.querySelectorAll('.syl-btn');
+        buttons.forEach(b => b.classList.remove('used'));
+        updateAnswerBox(cardIdx);
+    }
+
+    function updateAnswerBox(cardIdx) {
+        const box = document.getElementById(`ansbox-${cardIdx}`);
+        if (userFormedWords[cardIdx].length === 0) {
+            box.textContent = "...";
+        } else {
+            box.textContent = userFormedWords[cardIdx].join("-");
+        }
+    }
+
+    function checkAllWordPuzzles() {
+        let score = 0;
+        let total = allPuzzleAnimals.length;
+
+        allPuzzleAnimals.forEach((item, idx) => {
+            const card = document.getElementById(`pcard-${idx}`);
+            const formed = userFormedWords[idx].join("");
+
+            if (formed === item.correct) {
+                score++;
+                card.style.backgroundColor = '#10ac84';
+                card.style.borderColor = '#78e08f';
+            } else {
+                card.style.backgroundColor = '#ee5253';
+                card.style.borderColor = '#ff6b6b';
+            }
+        });
+
+        const res = document.getElementById('puzzle-res');
+        if (score === total) {
+            res.textContent = `🎉 FANTASTIC! Você organizou as sílabas de todos os ${total} animais perfeitamente!`;
+            res.style.color = "#78e08f";
+        } else {
+            res.textContent = `❌ Você acertou ${score} de ${total}. Revise os cartões em vermelho e tente novamente!`;
+            res.style.color = "#ff6b6b";
+        }
+    }
+
+    // Inicialização
+    loadSeaQuestion();
+    initPuzzleCards();
+</script>
+
+</body>
+</html>

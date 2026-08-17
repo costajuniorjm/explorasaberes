@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 1: Como Surgiram as Cidades</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #fff8f0; color: #333; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); border-top: 6px solid #e65100; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ffe0b2; }
+        .btn-back { background: #e65100; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #bf360c; }
+        h1 { color: #e65100; font-size: 1.8rem; }
+        
+        .section-box { background: #fafafa; border: 2px solid #ffe0b2; border-radius: 10px; padding: 20px; margin-bottom: 25px; }
+        .section-title { font-size: 1.25rem; color: #d84315; margin-bottom: 15px; font-weight: bold; }
+        .instructions { background: #fff3e0; padding: 12px; border-radius: 6px; margin-bottom: 15px; color: #bf360c; font-weight: 500; font-size: 0.95rem; }
+
+        /* Atividade 1: Numere Corretamente */
+        .num-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .num-item { background: white; border: 2px solid #e0e0e0; border-radius: 8px; padding: 15px; display: flex; align-items: center; gap: 15px; }
+        .num-select { width: 140px; padding: 8px 12px; font-size: 1rem; border-radius: 6px; border: 2px solid #e65100; font-weight: bold; color: #e65100; background: #fff8f0; }
+        .num-text { flex: 1; font-size: 1rem; color: #2c3e50; line-height: 1.4; }
+
+        /* Atividade 2: Primeiras Cidades e Colégios */
+        .quiz-row { margin-bottom: 15px; background: white; padding: 12px; border-radius: 8px; border: 1px solid #eee; }
+        .quiz-row select { width: 100%; padding: 8px; margin-top: 8px; border-radius: 6px; border: 1px solid #ccc; font-weight: 500; }
+
+        .btn-check { background: #27ae60; color: white; border: none; padding: 14px 30px; font-size: 1.15rem; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: background 0.2s; }
+        .btn-check:hover { background: #219150; }
+        .result-box { margin-top: 20px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>🏛️ Jogo 1: Como Surgiram as Cidades</h1>
+        <a href="index_historia.html" class="btn-back">⬅ Voltar ao Portal de História</a>
+    </div>
+
+    <!-- ATIVIDADE 1: NUMERE CORRETAMENTE (PÁG 205 DO LIVRO) -->
+    <div class="section-box">
+        <div class="section-title">📝 Desafio 1: Numere Corretamente (Página 205)</div>
+        <div class="instructions">
+            <strong>Legenda de Numeração:</strong><br>
+            ( 1 ) Africanos &nbsp;&nbsp;|&nbsp;&nbsp; ( 2 ) Indígenas &nbsp;&nbsp;|&nbsp;&nbsp; ( 3 ) Jesuítas
+        </div>
+
+        <div class="num-grid">
+            <div class="num-item" id="item-num-1">
+                <select class="num-select" id="num-q1" data-correct="1">
+                    <option value="">Selecione ( ? )</option>
+                    <option value="1">( 1 )</option>
+                    <option value="2">( 2 )</option>
+                    <option value="3">( 3 )</option>
+                </select>
+                <div class="num-text">Chegaram ao Brasil na condição de escravos.</div>
+            </div>
+
+            <div class="num-item" id="item-num-2">
+                <select class="num-select" id="num-q2" data-correct="2">
+                    <option value="">Selecione ( ? )</option>
+                    <option value="1">( 1 )</option>
+                    <option value="2">( 2 )</option>
+                    <option value="3">( 3 )</option>
+                </select>
+                <div class="num-text">Antes da chegada dos portugueses, eles já habitavam o Brasil em aldeias.</div>
+            </div>
+
+            <div class="num-item" id="item-num-3">
+                <select class="num-select" id="num-q3" data-correct="3">
+                    <option value="">Selecione ( ? )</option>
+                    <option value="1">( 1 )</option>
+                    <option value="2">( 2 )</option>
+                    <option value="3">( 3 )</option>
+                </select>
+                <div class="num-text">Eram padres que pertenciam à Companhia de Jesus, da Igreja Católica.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ATIVIDADE 2: FATOS HISTÓRICOS DAS PRIMEIRAS VILAS E CIDADES -->
+    <div class="section-box">
+        <div class="section-title">📜 Desafio 2: As Primeiras Vilas, Cidades e Escolas</div>
+        <div class="instructions">
+            Responda às questões sobre a origem das primeiras vilas e cidades do Brasil:
+        </div>
+
+        <div class="quiz-row" id="qrow-1">
+            <strong>1. Qual foi a primeira vila do Brasil, fundada em 1532 com casinhas simples de barro?</strong>
+            <select id="hist-1" data-correct="vicente">
+                <option value="">-- Selecione a Vila --</option>
+                <option value="vicente">Vila de São Vicente (1532)</option>
+                <option value="salvador">Cidade de Salvador (1549)</option>
+                <option value="velha">Vila Velha (1535)</option>
+            </select>
+        </div>
+
+        <div class="quiz-row" id="qrow-2">
+            <strong>2. Qual foi a primeira cidade do Brasil, fundada para ser a sede do governo colonial?</strong>
+            <select id="hist-2" data-correct="salvador">
+                <option value="">-- Selecione a Cidade --</option>
+                <option value="rio">Rio de Janeiro</option>
+                <option value="salvador">Salvador</option>
+                <option value="paraiba">Paraíba</option>
+            </select>
+        </div>
+
+        <div class="quiz-row" id="qrow-3">
+            <strong>3. Qual foi o primeiro colégio jesuíta fundado no Brasil pelos padres da Companhia de Jesus?</strong>
+            <select id="hist-3" data-correct="meninos">
+                <option value="">-- Selecione o Colégio --</option>
+                <option value="meninos">Colégio dos Meninos de Jesus (em Salvador)</option>
+                <option value="saopaulo">Colégio de São Paulo de Piratininga</option>
+                <option value="penha">Convento da Penha</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="btn-check" onclick="checkAllGame1()">Verificar Respostas do Jogo 1 🏆</button>
+    <div id="result-g1" class="result-box"></div>
+</div>
+
+<script>
+    function checkAllGame1() {
+        let total = 6;
+        let score = 0;
+
+        // Check Atividade 1 (3 items)
+        for (let i = 1; i <= 3; i++) {
+            let el = document.getElementById(`num-q${i}`);
+            let parent = document.getElementById(`item-num-${i}`);
+            if (el.value === el.getAttribute('data-correct')) {
+                score++;
+                parent.style.borderColor = '#27ae60';
+                parent.style.backgroundColor = '#e8f8f5';
+            } else {
+                parent.style.borderColor = '#e74c3c';
+                parent.style.backgroundColor = '#fadbd8';
+            }
+        }
+
+        // Check Atividade 2 (3 items)
+        for (let i = 1; i <= 3; i++) {
+            let el = document.getElementById(`hist-${i}`);
+            let parent = document.getElementById(`qrow-${i}`);
+            if (el.value === el.getAttribute('data-correct')) {
+                score++;
+                parent.style.borderColor = '#27ae60';
+                parent.style.backgroundColor = '#e8f8f5';
+            } else {
+                parent.style.borderColor = '#e74c3c';
+                parent.style.backgroundColor = '#fadbd8';
+            }
+        }
+
+        let res = document.getElementById('result-g1');
+        if (score === total) {
+            res.textContent = "🎉 PARABÉNS! Você acertou tudo sobre o surgimento das cidades e a história do Brasil colonial!";
+            res.style.color = "#27ae60";
+        } else {
+            res.textContent = `❌ Você acertou ${score} de ${total} itens. Corrija os itens em vermelho e tente novamente!`;
+            res.style.color = "#c0392b";
+        }
+    }
+</script>
+
+</body>
+</html>

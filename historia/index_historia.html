@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de História - ExploraSaberes</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #fff8f0; color: #333; }
+        header { background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%); color: white; padding: 2.2rem 1rem; text-align: center; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .btn-home { position: absolute; left: 20px; top: 20px; background: rgba(255,255,255,0.25); color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; transition: 0.2s; }
+        .btn-home:hover { background: rgba(255,255,255,0.4); }
+        .container { max-width: 1000px; margin: 2.5rem auto; padding: 0 1.5rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.8rem; }
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.06); border: 2px solid #ffe0b2; display: flex; flex-direction: column; }
+        .card-header { background: #fff3e0; padding: 1.2rem; border-bottom: 2px solid #ffe0b2; color: #e65100; font-weight: bold; font-size: 1.15rem; }
+        .card-body { padding: 1.4rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-body p { color: #555; line-height: 1.5; margin-bottom: 1.2rem; }
+        .btn-play { display: block; text-align: center; background: #e65100; color: white; text-decoration: none; padding: 12px; border-radius: 6px; font-weight: bold; transition: background 0.2s; }
+        .btn-play:hover { background: #bf360c; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="../index.html" class="btn-home">⬅ Menu Principal</a>
+        <h1>🏛️ Portal de História</h1>
+        <p>Explore as origens do Brasil, a vida no campo e na cidade e o funcionamento dos municípios!</p>
+    </header>
+
+    <div class="container">
+        <div class="grid">
+            <!-- Jogo 1 -->
+            <div class="card">
+                <div class="card-header">📜 Jogo 1: Como Surgiram as Cidades</div>
+                <div class="card-body">
+                    <p>Atividade obrigatória de <strong>Numere Corretamente (Pág. 205)</strong>, o que havia nas vilas coloniais (Câmara, Cadeia, Pelourinho), primeiras vilas e colégios jesuítas.</p>
+                    <a href="jogo1_como_surgiram_cidades.html" class="btn-play">Jogar Agora ▶</a>
+                </div>
+            </div>
+
+            <!-- Jogo 2 -->
+            <div class="card">
+                <div class="card-header">🌾 Jogo 2: Vida no Campo e na Cidade</div>
+                <div class="card-body">
+                    <p><strong>Arrastar e Soltar em Caixas</strong> organizando a Zona Rural e Zona Urbana, além de desafio de <strong>Verdadeiro ou Falso</strong> sobre êxodo inverso, quilombos e o Censo do IBGE.</p>
+                    <a href="jogo2_vida_campo_cidade.html" class="btn-play">Jogar Agora ▶</a>
+                </div>
+            </div>
+
+            <!-- Jogo 3 -->
+            <div class="card">
+                <div class="card-header">🏢 Jogo 3: Funcionamento dos Municípios</div>
+                <div class="card-body">
+                    <p><strong>Associação Interativa</strong> sobre o papel da Prefeitura (Prefeito), Câmara Municipal (Vereadores), voto a cada 4 anos e a história de fundação de Vila Velha (1535).</p>
+                    <a href="jogo3_funcionamento_municipios.html" class="btn-play">Jogar Agora ▶</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

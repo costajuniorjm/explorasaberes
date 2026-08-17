@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 2: Vida no Campo e na Cidade</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f0fdf4; color: #333; padding: 20px; }
+        .container { max-width: 950px; margin: 0 auto; background: white; padding: 25px; border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); border-top: 6px solid #2e7d32; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #c8e6c9; }
+        .btn-back { background: #2e7d32; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #1b5e20; }
+        h1 { color: #2e7d32; font-size: 1.8rem; }
+
+        .section-box { background: #fafafa; border: 2px solid #c8e6c9; border-radius: 10px; padding: 20px; margin-bottom: 25px; }
+        .section-title { font-size: 1.25rem; color: #1b5e20; margin-bottom: 15px; font-weight: bold; }
+        .instructions { background: #e8f5e9; padding: 12px; border-radius: 6px; margin-bottom: 15px; color: #2e7d32; font-weight: 500; }
+
+        /* Arrastar e Soltar */
+        .cards-pool { display: flex; flex-wrap: wrap; gap: 10px; padding: 15px; background: #f1f8e9; border: 2px dashed #aed581; border-radius: 10px; min-height: 90px; margin-bottom: 20px; justify-content: center; align-items: center; }
+        .drag-item { background: white; border: 2px solid #2e7d32; border-radius: 8px; padding: 8px 14px; cursor: grab; font-weight: bold; color: #1b5e20; user-select: none; box-shadow: 0 2px 5px rgba(0,0,0,0.08); }
+        .drag-item:active { cursor: grabbing; opacity: 0.6; }
+
+        .boxes-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .target-box { background: #fdfefe; border: 3px solid #81c784; border-radius: 10px; min-height: 200px; padding: 12px; display: flex; flex-direction: column; align-items: center; }
+        .target-box.drag-over { background: #e8f8f5; border-color: #2e7d32; }
+        .box-header { font-weight: bold; font-size: 1.1rem; color: #1b5e20; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid #e0e0e0; width: 100%; text-align: center; }
+        .box-content { width: 100%; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
+
+        /* Falso ou Verdadeiro */
+        .tf-table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0; }
+        .tf-table td { padding: 12px; border-bottom: 1px solid #eee; }
+        .tf-table tr:last-child td { border-bottom: none; }
+        .tf-select { padding: 6px 10px; border-radius: 6px; border: 2px solid #2e7d32; font-weight: bold; font-size: 0.95rem; background: #f1f8e9; }
+
+        .btn-check { background: #27ae60; color: white; border: none; padding: 14px 30px; font-size: 1.15rem; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: background 0.2s; }
+        .btn-check:hover { background: #219150; }
+        .result-box { margin-top: 20px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>🌾 Jogo 2: Vida no Campo e na Cidade</h1>
+        <a href="index_historia.html" class="btn-back">⬅ Voltar ao Portal de História</a>
+    </div>
+
+    <!-- DESAFIO 1: ORGANIZAR EM CAIXAS (ARRASTAR E SOLTAR) -->
+    <div class="section-box">
+        <div class="section-title">📦 Desafio 1: Caixas do Campo e da Cidade (Arrastar e Soltar)</div>
+        <div class="instructions">
+            Arraste cada elemento da área verde para a sua respectiva caixa: <strong>Vida no Campo (Zona Rural)</strong> ou <strong>Vida na Cidade (Zona Urbana)</strong>!
+        </div>
+
+        <div class="cards-pool" id="pool" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div class="drag-item" draggable="true" ondragstart="drag(event)" id="c1" data-box="campo">🌽 Plantações e Hortas</div>
+            <div class="drag-item" draggable="true" ondragstart="drag(event)" id="c2" data-box="cidade">🏭 Grandes Indústrias e Fábricas</div>
+            <div class="drag-item" draggable="true" ondragstart="drag(event)" id="c3" data-box="campo">🐄 Criação de Gado e Leite</div>
+            <div class="drag-item" draggable="true" ondragstart="drag(event)" id="c4" data-box="cidade">🚦 Ruas asfaltadas e Trânsito</div>
+            <div class="drag-item" draggable="true" ondragstart="drag(event)" id="c5" data-box="campo">🌳 Contato direto com a Natureza</div>
+            <div class="drag-item" draggable="true" ondragstart="drag(event)" id="c6" data-box="cidade">🏢 Prédios altos e Apartamentos</div>
+        </div>
+
+        <div class="boxes-container">
+            <div class="target-box" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-type="campo">
+                <div class="box-header">🚜 VIDA NO CAMPO (ZONA RURAL)</div>
+                <div class="box-content"></div>
+            </div>
+
+            <div class="target-box" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-type="cidade">
+                <div class="box-header">🏙️ VIDA NA CIDADE (ZONA URBANA)</div>
+                <div class="box-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DESAFIO 2: VERDADEIRO (V) OU FALSO (F) -->
+    <div class="section-box">
+        <div class="section-title">⚖️ Desafio 2: Verdadeiro (V) ou Falso (F)?</div>
+        <div class="instructions">
+            Classifique as afirmações de acordo com os estudos de história e o resumo do município:
+        </div>
+
+        <table class="tf-table">
+            <tr id="tf-row-1">
+                <td style="width: 120px;">
+                    <select class="tf-select" id="tf-1" data-correct="V">
+                        <option value="">( ? )</option>
+                        <option value="V">V</option>
+                        <option value="F">F</option>
+                    </select>
+                </td>
+                <td>O estado brasileiro com a maior quantidade de população e comunidades <strong>quilombolas</strong> é a <strong>Bahia</strong>.</td>
+            </tr>
+
+            <tr id="tf-row-2">
+                <td style="width: 120px;">
+                    <select class="tf-select" id="tf-2" data-correct="V">
+                        <option value="">( ? )</option>
+                        <option value="V">V</option>
+                        <option value="F">F</option>
+                    </select>
+                </td>
+                <td>O <strong>Censo Demográfico</strong> visita os domicílios do Brasil para contar a população e ajudar o governo a planejar escolas, hospitais e serviços.</td>
+            </tr>
+
+            <tr id="tf-row-3">
+                <td style="width: 120px;">
+                    <select class="tf-select" id="tf-3" data-correct="V">
+                        <option value="">( ? )</option>
+                        <option value="V">V</option>
+                        <option value="F">F</option>
+                    </select>
+                </td>
+                <td>Hoje em dia, muitas pessoas preferem sair da cidade para morar no campo em busca de <strong>mais qualidade de vida, tranquilidade e segurança</strong> (êxodo urbano/inverso).</td>
+            </tr>
+
+            <tr id="tf-row-4">
+                <td style="width: 120px;">
+                    <select class="tf-select" id="tf-4" data-correct="F">
+                        <option value="">( ? )</option>
+                        <option value="V">V</option>
+                        <option value="F">F</option>
+                    </select>
+                </td>
+                <td>Um município só pode ter área urbana (cidade), sendo proibido existir áreas rurais ou mistas no seu território.</td>
+            </tr>
+        </table>
+    </div>
+
+    <button class="btn-check" onclick="checkAllGame2()">Verificar Respostas do Jogo 2 🏆</button>
+    <div id="result-g2" class="result-box"></div>
+</div>
+
+<script>
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+    function dragEnter(ev) { 
+        var box = ev.target.closest('.target-box');
+        if(box) box.classList.add('drag-over'); 
+    }
+    function dragLeave(ev) { 
+        var box = ev.target.closest('.target-box');
+        if(box) box.classList.remove('drag-over'); 
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var draggedCard = document.getElementById(data);
+        if(!draggedCard) return;
+
+        var targetBox = ev.target.closest('.target-box');
+        var pool = ev.target.closest('.cards-pool');
+
+        if (targetBox) {
+            var content = targetBox.querySelector('.box-content');
+            content.appendChild(draggedCard);
+            targetBox.classList.remove('drag-over');
+        } else if (pool) {
+            pool.appendChild(draggedCard);
+        }
+    }
+
+    function checkAllGame2() {
+        let total = 10; // 6 drag items + 4 V/F questions
+        let score = 0;
+        let totalPlaced = 0;
+
+        // Check Drag and Drop (6 items)
+        document.querySelectorAll('.target-box').forEach(box => {
+            let type = box.getAttribute('data-type');
+            box.querySelectorAll('.drag-item').forEach(item => {
+                totalPlaced++;
+                if (item.getAttribute('data-box') === type) {
+                    score++;
+                    item.style.borderColor = '#27ae60';
+                    item.style.background = '#e8f8f5';
+                } else {
+                    item.style.borderColor = '#e74c3c';
+                    item.style.background = '#fadbd8';
+                }
+            });
+        });
+
+        // Check True/False (4 questions)
+        for (let i = 1; i <= 4; i++) {
+            let select = document.getElementById(`tf-${i}`);
+            let row = document.getElementById(`tf-row-${i}`);
+            if (select.value === select.getAttribute('data-correct')) {
+                score++;
+                row.style.backgroundColor = '#e8f8f5';
+            } else {
+                row.style.backgroundColor = '#fadbd8';
+            }
+        }
+
+        let res = document.getElementById('result-g2');
+        if (totalPlaced < 6) {
+            res.textContent = `⚠️ Coloque todos os 6 itens dentro das caixas antes de verificar!`;
+            res.style.color = "#d35400";
+        } else if (score === total) {
+            res.textContent = "🎉 PARABÉNS! Você acertou tudo sobre a vida no campo, na cidade, quilombos e o Censo!";
+            res.style.color = "#27ae60";
+        } else {
+            res.textContent = `❌ Você acertou ${score} de ${total} pontos. Verifique os itens em vermelho e tente novamente!`;
+            res.style.color = "#c0392b";
+        }
+    }
+</script>
+
+</body>
+</html>

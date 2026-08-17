@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Ciências - ExploraSaberes</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f4fdf8; color: #333; }
+        header { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 2rem 1rem; text-align: center; position: relative; }
+        .btn-home { position: absolute; left: 20px; top: 20px; background: rgba(255,255,255,0.25); color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; transition: 0.2s; }
+        .btn-home:hover { background: rgba(255,255,255,0.4); }
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1.5rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border: 1px solid #e0f2fe; display: flex; flex-direction: column; }
+        .card-header { background: #e6f4ea; padding: 1.2rem; border-bottom: 2px solid #ceebd5; color: #137333; font-weight: bold; }
+        .card-body { padding: 1.2rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .btn-play { display: block; text-align: center; background: #11998e; color: white; text-decoration: none; padding: 10px; border-radius: 6px; font-weight: bold; margin-top: 15px; }
+        .btn-play:hover { background: #0e8076; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="../index.html" class="btn-home">⬅ Menu Principal</a>
+        <h1>🔬 Portal de Ciências</h1>
+        <p>Aprenda sobre o reino animal, órgãos, reprodução e ecossistemas!</p>
+    </header>
+
+    <div class="container">
+        <div class="grid">
+            <div class="card">
+                <div class="card-header">📦 Jogo 1: Caixas dos Vertebrados</div>
+                <div class="card-body">
+                    <p><strong>Arrastar e Soltar:</strong> Classifique 15 animais entre Mamíferos, Aves, Peixes, Répteis e Anfíbios arrastando cada um para sua caixa correta.</p>
+                    <a href="jogo1_caixas_vertebrados.html" class="btn-play">Jogar Agora ▶</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">🐸 Jogo 2: Ciclo de Metamorfose da Rã</div>
+                <div class="card-body">
+                    <p><strong>Imagens Ampliadas:</strong> Ordene as 6 fases do desenvolvimento da rã, desde o ovo até o anfíbio adulto.</p>
+                    <a href="jogo2_metamorfose_ra.html" class="btn-play">Jogar Agora ▶</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">🥚 Jogo 3: Caça aos Modos de Reprodução</div>
+                <div class="card-body">
+                    <p><strong>Classificação Rápida:</strong> Agrupe 12 animais conforme o tipo de nascimento: Ovíparos, Vivíparos e Ovovivíparos.</p>
+                    <a href="jogo3_reproducao.html" class="btn-play">Jogar Agora ▶</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">🫁 Jogo 4: Laboratório de Respiração</div>
+                <div class="card-body">
+                    <p><strong>Associação Visual:</strong> Conecte cada animal ao seu tipo de respiração (Pulmonar, Branquial, Cutânea, Cutânea/Pulmonar ou Traqueal).</p>
+                    <a href="jogo4_respiracao.html" class="btn-play">Jogar Agora ▶</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">🐛 Jogo 5: Invertebrados e Cuidados com Vermes</div>
+                <div class="card-body">
+                    <p><strong>Tabuleiro de Hábitos:</strong> Separe os hábitos de prevenção contra vermoses e identifique atitudes saudáveis.</p>
+                    <a href="jogo5_invertebrados_vermes.html" class="btn-play">Jogar Agora ▶</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">🦋 Jogo 6: Metamorfose da Borboleta</div>
+                <div class="card-body">
+                    <p><strong>Ciclo de Vida:</strong> Ordene as 4 fases da transformação da borboleta desde o ovo até a forma adulta.</p>
+                    <a href="jogo6_borboleta_gestacao.html" class="btn-play">Jogar Agora ▶</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

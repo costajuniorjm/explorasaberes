@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 3: Reprodução dos Animais</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #eef9f5; color: #333; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ceebd5; }
+        .btn-back { background: #11998e; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #0e8076; }
+        h1 { color: #137333; font-size: 1.8rem; }
+
+        .instructions { background: #e6f4ea; padding: 12px 18px; border-radius: 8px; margin-bottom: 20px; color: #137333; font-weight: 500; }
+
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .card-item { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 10px; padding: 15px; text-align: center; }
+        .card-item img { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+        .card-title { font-weight: bold; font-size: 1.1rem; color: #2c3e50; margin-bottom: 10px; }
+
+        select { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-weight: 500; }
+
+        .btn-check { background: #27ae60; color: white; border: none; padding: 12px 30px; font-size: 1.1rem; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn-check:hover { background: #219150; }
+
+        .result-box { margin-top: 20px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>🥚 Jogo 3: Modos de Reprodução</h1>
+        <a href="index_ciencias.html" class="btn-back">⬅ Voltar ao Portal de Ciências</a>
+    </div>
+
+    <div class="instructions">
+        💡 Classifique cada animal em <strong>Ovíparo</strong> (ovo fora da mãe), <strong>Vivíparo</strong> (gestação na barriga da mãe) ou <strong>Ovovivíparo</strong> (ovo mantido dentro do corpo da mãe)!
+    </div>
+
+    <div class="cards-grid">
+        <div class="card-item">
+            <img src="../img/ciencias/galinha.jpg" onerror="this.src='https://via.placeholder.com/80?text=🐔'">
+            <div class="card-title">Galinha</div>
+            <select id="rep-1">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <div class="card-item">
+            <img src="../img/ciencias/gato.jpg" onerror="this.src='https://via.placeholder.com/80?text=🐱'">
+            <div class="card-title">Gato</div>
+            <select id="rep-2">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <div class="card-item">
+            <img src="../img/ciencias/jararaca.jpg" onerror="this.src='https://via.placeholder.com/80?text=🐍'">
+            <div class="card-title">Cobra Jararaca</div>
+            <select id="rep-3">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <div class="card-item">
+            <img src="../img/ciencias/elefante.jpg" onerror="this.src='https://via.placeholder.com/80?text=🐘'">
+            <div class="card-title">Elefante</div>
+            <select id="rep-4">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <div class="card-item">
+            <img src="../img/ciencias/tartaruga.jpg" onerror="this.src='https://via.placeholder.com/80?text=🐢'">
+            <div class="card-title">Tartaruga-do-Amazonas</div>
+            <select id="rep-5">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <div class="card-item">
+            <img src="../img/ciencias/tubarao_femea.jpg" onerror="this.src='https://via.placeholder.com/80?text=🦈'">
+            <div class="card-title">Alguns Tubarões</div>
+            <select id="rep-6">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="btn-check" onclick="checkReproduction()">Verificar Classificação 🏆</button>
+
+    <div id="result" class="result-box"></div>
+</div>
+
+<script>
+    function checkReproduction() {
+        var c1 = document.getElementById('rep-1').value;
+        var c2 = document.getElementById('rep-2').value;
+        var c3 = document.getElementById('rep-3').value;
+        var c4 = document.getElementById('rep-4').value;
+        var c5 = document.getElementById('rep-5').value;
+        var c6 = document.getElementById('rep-6').value;
+
+        if(c1 === 'oviparo' && c2 === 'viviparo' && c3 === 'ovoviviparo' && c4 === 'viviparo' && c5 === 'oviparo' && c6 === 'ovoviviparo') {
+            document.getElementById('result').textContent = "🎉 EXCELENTE! Você acertou todos os tipos de reprodução animal!";
+            document.getElementById('result').style.color = "#27ae60";
+        } else {
+            document.getElementById('result').textContent = "❌ Alguma resposta está incorreta. Lembre-se: Jararaca e alguns tubarões são ovovivíparos!";
+            document.getElementById('result').style.color = "#c0392b";
+        }
+    }
+</script>
+
+</body>
+</html>

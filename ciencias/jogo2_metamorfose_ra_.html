@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 2: Metamorfose da Rã</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #eef9f5; color: #333; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ceebd5; }
+        .btn-back { background: #11998e; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #0e8076; }
+        h1 { color: #137333; font-size: 1.8rem; }
+
+        .instructions { background: #e6f4ea; padding: 12px 18px; border-radius: 8px; margin-bottom: 20px; color: #137333; font-weight: 500; }
+
+        .stage-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
+        .stage-card { background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 8px; padding: 12px 18px; display: flex; align-items: center; gap: 15px; }
+        .stage-num { background: #11998e; color: white; font-weight: bold; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+        
+        select { padding: 8px 12px; border-radius: 6px; border: 1px solid #94a3b8; font-size: 0.95rem; flex: 1; background: white; }
+
+        .btn-check { background: #27ae60; color: white; border: none; padding: 12px 30px; font-size: 1.1rem; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn-check:hover { background: #219150; }
+
+        .result-box { margin-top: 20px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>🐸 Jogo 2: Ciclo de Metamorfose da Rã</h1>
+        <a href="index_ciencias.html" class="btn-back">⬅ Voltar ao Portal de Ciências</a>
+    </div>
+
+    <div class="instructions">
+        💡 <strong>Desafio de Ordenação:</strong> Escolha a descrição correta para cada uma das 6 etapas do ciclo de vida da rã na ordem de transformação!
+    </div>
+
+    <div class="stage-list">
+        <!-- Stage 1 -->
+        <div class="stage-card">
+            <div class="stage-num">1</div>
+            <img src="../img/ciencias/ra_fase1.jpg" style="width: 50px; height: 50px; border-radius: 6px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/50?text=🥚'">
+            <select id="stage-1">
+                <option value="">-- Escolha a descrição da 1ª Etapa --</option>
+                <option value="4">Girino com duas pernas traseiras mais desenvolvidas</option>
+                <option value="1">Ovos de rã fecundados. Esses ovos vão se tornar girinos.</option>
+                <option value="6">Rã em forma de adulto, logo poderá se reproduzir</option>
+            </select>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="stage-card">
+            <div class="stage-num">2</div>
+            <img src="../img/ciencias/ra_fase2.jpg" style="width: 50px; height: 50px; border-radius: 6px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/50?text=🐟'">
+            <select id="stage-2">
+                <option value="">-- Escolha a descrição da 2ª Etapa --</option>
+                <option value="2">Quando o girino sai do ovo, respira por meio de brânquias na cabeça.</option>
+                <option value="5">Girino com quatro pernas e uma cauda que o ajuda a nadar</option>
+                <option value="3">Girino desenvolve pulmões e precisa ir à superfície</option>
+            </select>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="stage-card">
+            <div class="stage-num">3</div>
+            <img src="../img/ciencias/ra_fase3.jpg" style="width: 50px; height: 50px; border-radius: 6px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/50?text=🫧'">
+            <select id="stage-3">
+                <option value="">-- Escolha a descrição da 3ª Etapa --</option>
+                <option value="1">Ovos de rã fecundados</option>
+                <option value="3">Girino com as pernas traseiras desenvolvidas. Nessa fase, desenvolve pulmões e vai à superfície.</option>
+                <option value="6">Rã adulta</option>
+            </select>
+        </div>
+
+        <!-- Stage 4 -->
+        <div class="stage-card">
+            <div class="stage-num">4</div>
+            <img src="../img/ciencias/ra_fase4.jpg" style="width: 50px; height: 50px; border-radius: 6px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/50?text=🦵'">
+            <select id="stage-4">
+                <option value="">-- Escolha a descrição da 4ª Etapa --</option>
+                <option value="4">Girino com duas pernas traseiras mais desenvolvidas e as dianteiras no início do desenvolvimento.</option>
+                <option value="2">Girino sai do ovo</option>
+                <option value="5">Girino com quatro pernas e cauda</option>
+            </select>
+        </div>
+
+        <!-- Stage 5 -->
+        <div class="stage-card">
+            <div class="stage-num">5</div>
+            <img src="../img/ciencias/ra_fase5.jpg" style="width: 50px; height: 50px; border-radius: 6px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/50?text=🦎'">
+            <select id="stage-5">
+                <option value="">-- Escolha a descrição da 5ª Etapa --</option>
+                <option value="3">Girino desenvolve pulmões</option>
+                <option value="5">Girino com quatro pernas e uma cauda que o ajuda a nadar.</option>
+                <option value="6">Rã em forma de adulto</option>
+            </select>
+        </div>
+
+        <!-- Stage 6 -->
+        <div class="stage-card">
+            <div class="stage-num">6</div>
+            <img src="../img/ciencias/ra_fase6.jpg" style="width: 50px; height: 50px; border-radius: 6px; object-fit: cover;" onerror="this.src='https://via.placeholder.com/50?text=🐸'">
+            <select id="stage-6">
+                <option value="">-- Escolha a descrição da 6ª Etapa --</option>
+                <option value="1">Ovos de rã</option>
+                <option value="4">Girino com duas pernas</option>
+                <option value="6">Rã em forma de adulto, logo poderá se reproduzir e dar origem a outras rãs.</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="btn-check" onclick="checkMetamorphosis()">Verificar Ordem da Metamorfose 🔄</button>
+
+    <div id="result" class="result-box"></div>
+</div>
+
+<script>
+    function checkMetamorphosis() {
+        var answers = [
+            document.getElementById('stage-1').value,
+            document.getElementById('stage-2').value,
+            document.getElementById('stage-3').value,
+            document.getElementById('stage-4').value,
+            document.getElementById('stage-5').value,
+            document.getElementById('stage-6').value
+        ];
+
+        var correct = ["1", "2", "3", "4", "5", "6"];
+        var score = 0;
+
+        for(var i=0; i<6; i++) {
+            if(answers[i] === correct[i]) score++;
+        }
+
+        var res = document.getElementById('result');
+        if(score === 6) {
+            res.textContent = "🎉 SENSACIONAL! Você organizou perfeitamente toda a metamorfose da rã!";
+            res.style.color = "#27ae60";
+        } else {
+            res.textContent = `❌ Você acertou ${score} de 6 etapas. Revise a sequência do livro e tente novamente!`;
+            res.style.color = "#c0392b";
+        }
+    }
+</script>
+
+</body>
+</html>

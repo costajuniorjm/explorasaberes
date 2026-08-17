@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 6: Metamorfose da Borboleta</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #fdf6e2; color: #333; padding: 20px; }
+        .container { max-width: 950px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #f39c12; }
+        .btn-back { background: #d35400; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #a04000; }
+        h1 { color: #d35400; font-size: 1.8rem; }
+
+        .instructions { background: #fef9e7; padding: 12px 18px; border-radius: 8px; margin-bottom: 25px; color: #7e5109; font-weight: 500; }
+
+        .section-box { background: #fafafa; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .section-box h2 { font-size: 1.3rem; color: #d35400; margin-bottom: 15px; border-left: 4px solid #f39c12; padding-left: 10px; }
+
+        /* Metamorphosis Grid */
+        .butterfly-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .butterfly-card { background: white; border: 2px solid #f39c12; border-radius: 10px; padding: 15px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+        
+        .butterfly-img-wrap { width: 100px; height: 100px; border-radius: 8px; overflow: hidden; background: #fef5e7; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+        .butterfly-img-wrap img { width: 100%; height: 100%; object-fit: contain; }
+        .fallback-icon { font-size: 2.8rem; }
+
+        select { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 0.95rem; background: white; cursor: pointer; }
+
+        .btn-check { background: #27ae60; color: white; border: none; padding: 14px 30px; font-size: 1.1rem; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; transition: background 0.2s; }
+        .btn-check:hover { background: #219150; }
+
+        .result-box { margin-top: 15px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>🦋 Jogo 6: Metamorfose da Borboleta</h1>
+        <a href="index_ciencias.html" class="btn-back">⬅ Voltar ao Portal de Ciências</a>
+    </div>
+
+    <div class="instructions">
+        💡 <strong>Desafio de Ordenação:</strong> Observe as 4 fases da metamorfose da borboleta e selecione o acontecimento correto de cada etapa!
+    </div>
+
+    <div class="section-box">
+        <h2>🐛 Ciclo de Vida da Borboleta</h2>
+
+        <div class="butterfly-grid">
+            <div class="butterfly-card" id="bcard-1">
+                <div style="font-weight:bold; margin-bottom:8px; color:#d35400; font-size: 1.1rem;">Etapa 1</div>
+                <div class="butterfly-img-wrap">
+                    <img src="../img/ciencias/borboleta_fase1.jpg" alt="Etapa 1" onerror="showIconFallback(this, '🥚')">
+                </div>
+                <select id="b-1">
+                    <option value="">-- Selecione --</option>
+                    <option value="ovo">Ovos depositados na folha</option>
+                    <option value="lagarta">Lagarta (alimenta-se de folhas)</option>
+                    <option value="crisalida">Crisálida (casulo)</option>
+                    <option value="borboleta">Borboleta adulta formada</option>
+                </select>
+            </div>
+
+            <div class="butterfly-card" id="bcard-2">
+                <div style="font-weight:bold; margin-bottom:8px; color:#d35400; font-size: 1.1rem;">Etapa 2</div>
+                <div class="butterfly-img-wrap">
+                    <img src="../img/ciencias/borboleta_fase2.jpg" alt="Etapa 2" onerror="showIconFallback(this, '🐛')">
+                </div>
+                <select id="b-2">
+                    <option value="">-- Selecione --</option>
+                    <option value="ovo">Ovos depositados na folha</option>
+                    <option value="lagarta">Lagarta (alimenta-se de folhas)</option>
+                    <option value="crisalida">Crisálida (casulo)</option>
+                    <option value="borboleta">Borboleta adulta formada</option>
+                </select>
+            </div>
+
+            <div class="butterfly-card" id="bcard-3">
+                <div style="font-weight:bold; margin-bottom:8px; color:#d35400; font-size: 1.1rem;">Etapa 3</div>
+                <div class="butterfly-img-wrap">
+                    <img src="../img/ciencias/borboleta_fase3.jpg" alt="Etapa 3" onerror="showIconFallback(this, '🪡')">
+                </div>
+                <select id="b-3">
+                    <option value="">-- Selecione --</option>
+                    <option value="ovo">Ovos depositados na folha</option>
+                    <option value="lagarta">Lagarta (alimenta-se de folhas)</option>
+                    <option value="crisalida">Crisálida (casulo)</option>
+                    <option value="borboleta">Borboleta adulta formada</option>
+                </select>
+            </div>
+
+            <div class="butterfly-card" id="bcard-4">
+                <div style="font-weight:bold; margin-bottom:8px; color:#d35400; font-size: 1.1rem;">Etapa 4</div>
+                <div class="butterfly-img-wrap">
+                    <img src="../img/ciencias/borboleta_fase4.jpg" alt="Etapa 4" onerror="showIconFallback(this, '🦋')">
+                </div>
+                <select id="b-4">
+                    <option value="">-- Selecione --</option>
+                    <option value="ovo">Ovos depositados na folha</option>
+                    <option value="lagarta">Lagarta (alimenta-se de folhas)</option>
+                    <option value="crisalida">Crisálida (casulo)</option>
+                    <option value="borboleta">Borboleta adulta formada</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="btn-check" onclick="checkButterfly()">Verificar Metamorfose 🦋</button>
+        <div id="res-b" class="result-box"></div>
+    </div>
+</div>
+
+<script>
+    function showIconFallback(imgElement, emoji) {
+        imgElement.onerror = null;
+        const parent = imgElement.parentElement;
+        parent.innerHTML = `<span class="fallback-icon">${emoji}</span>`;
+    }
+
+    function checkButterfly() {
+        const b1 = document.getElementById('b-1').value;
+        const b2 = document.getElementById('b-2').value;
+        const b3 = document.getElementById('b-3').value;
+        const b4 = document.getElementById('b-4').value;
+
+        const res = document.getElementById('res-b');
+        if (b1 === 'ovo' && b2 === 'lagarta' && b3 === 'crisalida' && b4 === 'borboleta') {
+            res.textContent = "🎉 PERFEITO! Você ordenou todo o ciclo da borboleta corretamente!";
+            res.style.color = "#27ae60";
+        } else {
+            res.textContent = "❌ Alguma etapa está fora de ordem. A sequência é: Ovo ➔ Lagarta ➔ Crisálida ➔ Borboleta adulta.";
+            res.style.color = "#c0392b";
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 3: Verb To Be Master</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #2c3e50; color: #ecf0f1; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: #34495e; padding: 25px; border-radius: 14px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); border-top: 6px solid #9b59b6; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #7f8c8d; }
+        .btn-back { background: #e74c3c; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #c0392b; }
+        h1 { color: #f1c40f; font-size: 1.8rem; }
+
+        .section-box { background: #2c3e50; border: 2px solid #7f8c8d; border-radius: 12px; padding: 20px; margin-bottom: 25px; }
+        .section-title { font-size: 1.3rem; color: #f1c40f; margin-bottom: 15px; font-weight: bold; }
+        .instructions { background: rgba(255,255,255,0.08); padding: 12px; border-radius: 8px; margin-bottom: 15px; color: #bdc3c7; font-size: 0.95rem; }
+
+        /* --- DESAFIO 1: COMPLETE --- */
+        .grid-sentences { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 15px; }
+        .sentence-item { background: #34495e; padding: 12px 15px; border-radius: 8px; border: 1px solid #7f8c8d; display: flex; align-items: center; justify-content: space-between; font-size: 1.05rem; }
+        .tobe-select { padding: 6px 12px; border-radius: 6px; border: 2px solid #9b59b6; font-weight: bold; font-size: 1rem; background: #fff; color: #2c3e50; }
+
+        /* --- DESAFIO 2: COLOR THE RIGHT ANSWER / BADGE SELECTOR --- */
+        .professions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 15px; }
+        .prof-card { background: #34495e; border: 2px solid #7f8c8d; border-radius: 10px; padding: 15px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; }
+        .prof-icon { font-size: 3.2rem; margin-bottom: 8px; }
+        .prof-text { font-size: 1.15rem; font-weight: bold; color: #f1c40f; margin-bottom: 12px; min-height: 28px; }
+        .verb-slot { color: #fff; background: #9b59b6; padding: 2px 8px; border-radius: 4px; text-decoration: underline; }
+        
+        .badge-group { display: flex; gap: 8px; width: 100%; justify-content: center; }
+        .badge-btn { flex: 1; background: #2c3e50; border: 2px solid #9b59b6; color: #fff; font-weight: bold; padding: 8px 0; border-radius: 6px; cursor: pointer; transition: all 0.2s; font-size: 1rem; }
+        .badge-btn:hover { background: #8e44ad; }
+        .badge-btn.selected { background: #f1c40f; color: #2c3e50; border-color: #f39c12; transform: scale(1.05); }
+
+        /* --- DESAFIO 3: DRAG AND DROP SENTENCE BUILDER --- */
+        .unscramble-drag-container { display: flex; flex-direction: column; gap: 18px; margin-bottom: 15px; }
+        .sentence-drag-card { background: #34495e; border: 2px solid #7f8c8d; border-radius: 10px; padding: 15px; }
+        .sentence-num { font-weight: bold; color: #f1c40f; margin-bottom: 10px; font-size: 1.05rem; }
+        
+        .word-bank { display: flex; gap: 8px; flex-wrap: wrap; padding: 10px; background: #2c3e50; border: 2px dashed #7f8c8d; border-radius: 8px; min-height: 50px; margin-bottom: 10px; align-items: center; }
+        .drop-target-slot { display: flex; gap: 8px; flex-wrap: wrap; padding: 10px; background: #1a252f; border: 2px solid #9b59b6; border-radius: 8px; min-height: 52px; align-items: center; }
+        
+        .drag-word-badge { background: #9b59b6; color: white; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: grab; user-select: none; font-size: 1.05rem; box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: transform 0.15s; }
+        .drag-word-badge:active { cursor: grabbing; opacity: 0.6; }
+        .drag-word-badge.in-slot { background: #2980b9; }
+
+        .btn-clear-drag { background: #e74c3c; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 8px; font-size: 0.85rem; }
+
+        .btn-check { background: #2ecc71; color: white; border: none; padding: 14px 25px; font-size: 1.15rem; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 20px; transition: background 0.2s; }
+        .btn-check:hover { background: #27ae60; }
+        .result-box { margin-top: 15px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>✏️ Jogo 3: Verb To Be Master</h1>
+        <a href="index_ingles.html" class="btn-back">⬅ Voltar ao Portal de Inglês</a>
+    </div>
+
+    <!-- DESAFIO 1: COMPLETE COM AM, IS OU ARE -->
+    <div class="section-box">
+        <div class="section-title">📝 Desafio 1: Complete with AM, IS or ARE</div>
+        <div class="instructions">
+            Preencha com a forma correta do Verb To Be (baseado na página 82 do livro):
+        </div>
+
+        <div class="grid-sentences">
+            <div class="sentence-item" id="tb-box-1">
+                <span>a) I _____ happy.</span>
+                <select class="tobe-select" id="tb-1" data-correct="am">
+                    <option value="">[ ? ]</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                </select>
+            </div>
+
+            <div class="sentence-item" id="tb-box-2">
+                <span>b) You _____ scared.</span>
+                <select class="tobe-select" id="tb-2" data-correct="are">
+                    <option value="">[ ? ]</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                </select>
+            </div>
+
+            <div class="sentence-item" id="tb-box-3">
+                <span>c) He _____ small.</span>
+                <select class="tobe-select" id="tb-3" data-correct="is">
+                    <option value="">[ ? ]</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                </select>
+            </div>
+
+            <div class="sentence-item" id="tb-box-4">
+                <span>d) She _____ surprised.</span>
+                <select class="tobe-select" id="tb-4" data-correct="is">
+                    <option value="">[ ? ]</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                </select>
+            </div>
+
+            <div class="sentence-item" id="tb-box-5">
+                <span>e) It _____ brown.</span>
+                <select class="tobe-select" id="tb-5" data-correct="is">
+                    <option value="">[ ? ]</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                </select>
+            </div>
+
+            <div class="sentence-item" id="tb-box-6">
+                <span>f) We _____ young.</span>
+                <select class="tobe-select" id="tb-6" data-correct="are">
+                    <option value="">[ ? ]</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                </select>
+            </div>
+
+            <div class="sentence-item" id="tb-box-7">
+                <span>g) You _____ tall.</span>
+                <select class="tobe-select" id="tb-7" data-correct="are">
+                    <option value="">[ ? ]</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                </select>
+            </div>
+
+            <div class="sentence-item" id="tb-box-8">
+                <span>h) They _____ old.</span>
+                <select class="tobe-select" id="tb-8" data-correct="are">
+                    <option value="">[ ? ]</option>
+                    <option value="am">am</option>
+                    <option value="is">is</option>
+                    <option value="are">are</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- DESAFIO 2: COLOR THE RIGHT ANSWER (BOTÕES DE DESTAQUE COLORIDO) -->
+    <div class="section-box">
+        <div class="section-title">🎨 Desafio 2: Color the Right Answer (Profissões & Personagens)</div>
+        <div class="instructions">
+            Clique no botão <strong>AM</strong>, <strong>IS</strong> ou <strong>ARE</strong> para iluminar e completar a frase de cada personagem (como na atividade do livro):
+        </div>
+
+        <div class="professions-grid">
+            <!-- 1 -->
+            <div class="prof-card" id="pcard-1" data-correct="am" data-template="I <span class='verb-slot'>[VERB]</span> a pilot.">
+                <div class="prof-icon">👨‍✈️</div>
+                <div class="prof-text" id="ptext-1">I _____ a pilot.</div>
+                <div class="badge-group">
+                    <button class="badge-btn" onclick="selectBadge(1, 'am', this)">AM</button>
+                    <button class="badge-btn" onclick="selectBadge(1, 'is', this)">IS</button>
+                    <button class="badge-btn" onclick="selectBadge(1, 'are', this)">ARE</button>
+                </div>
+            </div>
+
+            <!-- 2 -->
+            <div class="prof-card" id="pcard-2" data-correct="is" data-template="She <span class='verb-slot'>[VERB]</span> a nurse.">
+                <div class="prof-icon">👩‍⚕️</div>
+                <div class="prof-text" id="ptext-2">She _____ a nurse.</div>
+                <div class="badge-group">
+                    <button class="badge-btn" onclick="selectBadge(2, 'am', this)">AM</button>
+                    <button class="badge-btn" onclick="selectBadge(2, 'is', this)">IS</button>
+                    <button class="badge-btn" onclick="selectBadge(2, 'are', this)">ARE</button>
+                </div>
+            </div>
+
+            <!-- 3 -->
+            <div class="prof-card" id="pcard-3" data-correct="is" data-template="He <span class='verb-slot'>[VERB]</span> a gamer.">
+                <div class="prof-icon">🎧</div>
+                <div class="prof-text" id="ptext-3">He _____ a gamer.</div>
+                <div class="badge-group">
+                    <button class="badge-btn" onclick="selectBadge(3, 'am', this)">AM</button>
+                    <button class="badge-btn" onclick="selectBadge(3, 'is', this)">IS</button>
+                    <button class="badge-btn" onclick="selectBadge(3, 'are', this)">ARE</button>
+                </div>
+            </div>
+
+            <!-- 4 -->
+            <div class="prof-card" id="pcard-4" data-correct="is" data-template="She <span class='verb-slot'>[VERB]</span> a musician.">
+                <div class="prof-icon">🎸</div>
+                <div class="prof-text" id="ptext-4">She _____ a musician.</div>
+                <div class="badge-group">
+                    <button class="badge-btn" onclick="selectBadge(4, 'am', this)">AM</button>
+                    <button class="badge-btn" onclick="selectBadge(4, 'is', this)">IS</button>
+                    <button class="badge-btn" onclick="selectBadge(4, 'are', this)">ARE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DESAFIO 3: ARRASTAR E SOLTAR PARA MONTAR 6 FRASES -->
+    <div class="section-box">
+        <div class="section-title">🧩 Desafio 3: Drag & Drop Sentence Builder (6 Frases)</div>
+        <div class="instructions">
+            Arraste os blocos de palavras da caixa superior para o retângulo de baixo para montar a frase na ordem correta:
+        </div>
+
+        <div class="unscramble-drag-container" id="drag-sentences-container"></div>
+
+        <button class="btn-check" onclick="checkAllVerbToBeGame()">Verificar Respostas do Jogo 3 🏆</button>
+        <div id="tobe-res" class="result-box"></div>
+    </div>
+</div>
+
+<script>
+    // --- DESAFIO 2: BADGE SELECTION & INSTANT SENTENCE FILL ---
+    const badgeAnswers = {};
+
+    function selectBadge(cardIdx, val, btn) {
+        badgeAnswers[cardIdx] = val;
+        const parent = btn.parentElement;
+        parent.querySelectorAll('.badge-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+
+        // Preenche a frase imediatamente com o verbo clicado (mesmo se incorreto)
+        const card = document.getElementById(`pcard-${cardIdx}`);
+        const template = card.getAttribute('data-template');
+        const filledText = template.replace('[VERB]', val);
+        document.getElementById(`ptext-${cardIdx}`).innerHTML = filledText;
+    }
+
+    // --- DESAFIO 3: DRAG AND DROP FOR 6 SENTENCES ---
+    const sentencesList = [
+        { id: 1, correct: ["They", "are", "my", "family."] },
+        { id: 2, correct: ["The", "girl", "is", "reading."] },
+        { id: 3, correct: ["My", "bed", "is", "soft."] },
+        { id: 4, correct: ["I", "am", "a", "gymnast."] },
+        { id: 5, correct: ["Jack", "is", "Brazilian."] },
+        { id: 6, correct: ["The", "dog", "is", "black."] }
+    ];
+
+    function getGuaranteedScrambled(originalArray) {
+        let shuffled;
+        let attempts = 0;
+        const originalStr = originalArray.join(" ");
+
+        do {
+            shuffled = [...originalArray].sort(() => 0.5 - Math.random());
+            attempts++;
+        } while (shuffled.join(" ") === originalStr && attempts < 20);
+
+        if (shuffled.join(" ") === originalStr) {
+            shuffled = [...originalArray].reverse();
+        }
+        return shuffled;
+    }
+
+    function initDragSentences() {
+        const container = document.getElementById('drag-sentences-container');
+        container.innerHTML = "";
+
+        sentencesList.forEach((sObj) => {
+            const card = document.createElement('div');
+            card.className = 'sentence-drag-card';
+            card.id = `scard-${sObj.id}`;
+
+            const scrambled = getGuaranteedScrambled(sObj.correct);
+
+            let wordBadges = "";
+            scrambled.forEach((word, wIdx) => {
+                const uniqueId = `word-${sObj.id}-${wIdx}`;
+                wordBadges += `<div class="drag-word-badge" draggable="true" ondragstart="dragWord(event)" id="${uniqueId}" data-word="${word}">${word}</div>`;
+            });
+
+            card.innerHTML = `
+                <div class="sentence-num">Frase ${sObj.id}:</div>
+                <div class="word-bank" id="bank-${sObj.id}" ondrop="dropWord(event)" ondragover="allowDrop(event)">
+                    ${wordBadges}
+                </div>
+                <div class="drop-target-slot" id="slot-${sObj.id}" ondrop="dropWord(event)" ondragover="allowDrop(event)">
+                </div>
+                <button class="btn-clear-drag" onclick="resetSentence(${sObj.id})">Reiniciar Frase 🔄</button>
+            `;
+
+            container.appendChild(card);
+        });
+    }
+
+    function allowDrop(ev) { ev.preventDefault(); }
+    function dragWord(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function dropWord(ev) {
+        ev.preventDefault();
+        const data = ev.dataTransfer.getData("text");
+        const draggedEl = document.getElementById(data);
+        if (!draggedEl) return;
+
+        const targetSlot = ev.target.closest('.drop-target-slot');
+        const targetBank = ev.target.closest('.word-bank');
+
+        if (targetSlot) {
+            targetSlot.appendChild(draggedEl);
+            draggedEl.classList.add('in-slot');
+        } else if (targetBank) {
+            targetBank.appendChild(draggedEl);
+            draggedEl.classList.remove('in-slot');
+        }
+    }
+
+    function resetSentence(sId) {
+        const bank = document.getElementById(`bank-${sId}`);
+        const slot = document.getElementById(`slot-${sId}`);
+        const words = slot.querySelectorAll('.drag-word-badge');
+        words.forEach(w => {
+            w.classList.remove('in-slot');
+            bank.appendChild(w);
+        });
+    }
+
+    // --- CHECK ALL GAME 3 ---
+    function checkAllVerbToBeGame() {
+        let score = 0;
+        let total = 8 + 4 + 6; // 18 items
+
+        // 1. Desafio 1 (8 sentences)
+        for (let i = 1; i <= 8; i++) {
+            const sel = document.getElementById(`tb-${i}`);
+            const box = document.getElementById(`tb-box-${i}`);
+            if (sel.value === sel.getAttribute('data-correct')) {
+                score++;
+                box.style.borderColor = '#2ecc71';
+                box.style.backgroundColor = '#16a085';
+            } else {
+                box.style.borderColor = '#e74c3c';
+                box.style.backgroundColor = '#c0392b';
+            }
+        }
+
+        // 2. Desafio 2 (4 badges)
+        for (let i = 1; i <= 4; i++) {
+            const card = document.getElementById(`pcard-${i}`);
+            const correct = card.getAttribute('data-correct');
+            if (badgeAnswers[i] === correct) {
+                score++;
+                card.style.borderColor = '#2ecc71';
+                card.style.backgroundColor = '#16a085';
+            } else {
+                card.style.borderColor = '#e74c3c';
+                card.style.backgroundColor = '#c0392b';
+            }
+        }
+
+        // 3. Desafio 3 (6 drag sentences)
+        sentencesList.forEach(sObj => {
+            const slot = document.getElementById(`slot-${sObj.id}`);
+            const card = document.getElementById(`scard-${sObj.id}`);
+            const placedWords = Array.from(slot.querySelectorAll('.drag-word-badge')).map(el => el.getAttribute('data-word'));
+
+            if (placedWords.join(" ") === sObj.correct.join(" ")) {
+                score++;
+                card.style.borderColor = '#2ecc71';
+                card.style.backgroundColor = '#16a085';
+            } else {
+                card.style.borderColor = '#e74c3c';
+                card.style.backgroundColor = '#c0392b';
+            }
+        });
+
+        const res = document.getElementById('tobe-res');
+        if (score === total) {
+            res.textContent = "🎉 OUTSTANDING! Você dominou o Verb To Be e ordenou todas as frases com perfeição!";
+            res.style.color = "#2ecc71";
+        } else {
+            res.textContent = `❌ Você acertou ${score} de ${total}. Revise os blocos em vermelho e tente novamente!`;
+            res.style.color = "#e74c3c";
+        }
+    }
+
+    // Inicializa Desafio 3
+    initDragSentences();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 1: Caixas dos Vertebrados</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #eef9f5; color: #333; padding: 20px; }
+        .container { max-width: 1050px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ceebd5; }
+        .btn-back { background: #11998e; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #0e8076; }
+        h1 { color: #137333; font-size: 1.8rem; }
+        
+        .instructions { background: #e6f4ea; padding: 12px 18px; border-radius: 8px; margin-bottom: 20px; color: #137333; font-weight: 500; }
+
+        /* Animal Cards Pool Container */
+        .animals-pool { display: flex; flex-wrap: wrap; gap: 10px; padding: 15px; background: #f4f6f8; border: 2px dashed #b0bec5; border-radius: 10px; min-height: 120px; margin-bottom: 25px; justify-content: center; align-items: center; }
+        
+        .animal-card { background: white; border: 2px solid #2980b9; border-radius: 8px; padding: 6px 12px; cursor: grab; font-weight: bold; color: #2c3e50; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); user-select: none; transition: transform 0.15s ease, background 0.2s; }
+        .animal-card img { width: 36px; height: 36px; object-fit: cover; border-radius: 4px; pointer-events: none; }
+        .animal-card:active { cursor: grabbing; opacity: 0.6; transform: scale(0.95); }
+
+        /* Boxes Container */
+        .boxes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 25px; }
+        .box { background: #fdfefe; border: 3px solid #bdc3c7; border-radius: 10px; min-height: 220px; padding: 10px; display: flex; flex-direction: column; align-items: center; transition: background 0.2s, border-color 0.2s; }
+        .box.drag-over { background: #e8f8f5; border-color: #27ae60; }
+        .box-title { font-weight: bold; font-size: 1rem; color: #2c3e50; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 2px solid #ecf0f1; width: 100%; text-align: center; }
+        .box-items { width: 100%; display: flex; flex-direction: column; gap: 8px; flex-grow: 1; }
+
+        .controls { text-align: center; display: flex; justify-content: center; gap: 15px; }
+        .btn-check { background: #27ae60; color: white; border: none; padding: 12px 30px; font-size: 1.1rem; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-check:hover { background: #219150; }
+        .btn-reset { background: #e74c3c; color: white; border: none; padding: 12px 20px; font-size: 1.1rem; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .btn-reset:hover { background: #c0392b; }
+
+        .result-box { margin-top: 20px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>📦 Jogo 1: Caixas dos Vertebrados</h1>
+        <a href="index_ciencias.html" class="btn-back">⬅ Voltar ao Portal de Ciências</a>
+    </div>
+
+    <div class="instructions">
+        💡 <strong>Como Jogar:</strong> Arraste todos os <strong>15 animais vertebrados</strong> da área cinza para as caixas corretas de acordo com a sua classificação biológica!
+    </div>
+
+    <div class="animals-pool" id="pool" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <!-- MAMÍFEROS -->
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a1" data-class="mamifero">
+            <img src="../img/ciencias/baleia.jpg" alt="Baleia" onerror="this.src='https://via.placeholder.com/36?text=🐳'"> Baleia Azul
+        </div>
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a2" data-class="mamifero">
+            <img src="../img/ciencias/morcego.jpg" alt="Morcego" onerror="this.src='https://via.placeholder.com/36?text=🦇'"> Morcego
+        </div>
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a3" data-class="mamifero">
+            <img src="../img/ciencias/gato.jpg" alt="Gato" onerror="this.src='https://via.placeholder.com/36?text=🐱'"> Gato
+        </div>
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a4" data-class="mamifero">
+            <img src="../img/ciencias/elefante.jpg" alt="Elefante" onerror="this.src='https://via.placeholder.com/36?text=🐘'"> Elefante
+        </div>
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a5" data-class="mamifero">
+            <img src="../img/ciencias/cachorro.jpg" alt="Cachorro" onerror="this.src='https://via.placeholder.com/36?text=🐶'"> Cachorro
+        </div>
+
+        <!-- RÉPTEIS -->
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a6" data-class="repteil">
+            <img src="../img/ciencias/jacare.jpg" alt="Jacaré" onerror="this.src='https://via.placeholder.com/36?text=🐊'"> Jacaré
+        </div>
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a7" data-class="repteil">
+            <img src="../img/ciencias/jararaca.jpg" alt="Cobra Jararaca" onerror="this.src='https://via.placeholder.com/36?text=🐍'"> Cobra Jararaca
+        </div>
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a8" data-class="repteil">
+            <img src="../img/ciencias/tartaruga.jpg" alt="Tartaruga" onerror="this.src='https://via.placeholder.com/36?text=🐢'"> Tartaruga-do-Amazonas
+        </div>
+
+        <!-- AVES -->
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a9" data-class="ave">
+            <img src="../img/ciencias/avestruz.jpg" alt="Avestruz" onerror="this.src='https://via.placeholder.com/36?text=🦩'"> Avestruz
+        </div>
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a10" data-class="ave">
+            <img src="../img/ciencias/galinha.jpg" alt="Galinha" onerror="this.src='https://via.placeholder.com/36?text=🐔'"> Galinha
+        </div>
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a11" data-class="ave">
+            <img src="../img/ciencias/coruja.jpg" alt="Coruja" onerror="this.src='https://via.placeholder.com/36?text=🦉'"> Coruja
+        </div>
+
+        <!-- PEIXES -->
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a12" data-class="peixe">
+            <img src="../img/ciencias/tubarao.jpg" alt="Tubarão" onerror="this.src='https://via.placeholder.com/36?text=🦈'"> Tubarão
+        </div>
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a13" data-class="peixe">
+            <img src="../img/ciencias/atum.jpg" alt="Peixe Pacu" onerror="this.src='https://via.placeholder.com/36?text=🐟'"> Peixe Pacu / Atum
+        </div>
+
+        <!-- ANFÍBIOS -->
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a14" data-class="anfibio">
+            <img src="../img/ciencias/salamandra.jpg" alt="Salamandra" onerror="this.src='https://via.placeholder.com/36?text=🦎'"> Salamandra
+        </div>
+        <div class="animal-card" draggable="true" ondragstart="drag(event)" id="a15" data-class="anfibio">
+            <img src="../img/ciencias/sapo.jpg" alt="Sapo" onerror="this.src='https://via.placeholder.com/36?text=🐸'"> Sapo / Rã
+        </div>
+    </div>
+
+    <div class="boxes-grid">
+        <div class="box" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-box="mamifero">
+            <div class="box-title">🐶 MAMÍFEROS</div>
+            <div class="box-items"></div>
+        </div>
+        <div class="box" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-box="repteil">
+            <div class="box-title">🐢 RÉPTEIS</div>
+            <div class="box-items"></div>
+        </div>
+        <div class="box" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-box="ave">
+            <div class="box-title">🦅 AVES</div>
+            <div class="box-items"></div>
+        </div>
+        <div class="box" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-box="peixe">
+            <div class="box-title">🐟 PEIXES</div>
+            <div class="box-items"></div>
+        </div>
+        <div class="box" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-box="anfibio">
+            <div class="box-title">🐸 ANFÍBIOS</div>
+            <div class="box-items"></div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <button class="btn-check" onclick="checkResults()">Verificar Caixas 🏆</button>
+        <button class="btn-reset" onclick="location.reload()">Reiniciar 🔄</button>
+    </div>
+
+    <div id="result" class="result-box"></div>
+</div>
+
+<script>
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+    function dragEnter(ev) { 
+        var box = ev.target.closest('.box');
+        if(box) box.classList.add('drag-over'); 
+    }
+    function dragLeave(ev) { 
+        var box = ev.target.closest('.box');
+        if(box) box.classList.remove('drag-over'); 
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var draggedCard = document.getElementById(data);
+        if(!draggedCard) return;
+
+        var targetBox = ev.target.closest('.box');
+        var pool = ev.target.closest('.animals-pool');
+
+        if (targetBox) {
+            var itemsContainer = targetBox.querySelector('.box-items');
+            itemsContainer.appendChild(draggedCard);
+            targetBox.classList.remove('drag-over');
+        } else if (pool) {
+            pool.appendChild(draggedCard);
+        }
+    }
+
+    function checkResults() {
+        var boxes = document.querySelectorAll('.box');
+        var totalCorrect = 0;
+        var totalPlaced = 0;
+        var totalAnimals = 15;
+
+        boxes.forEach(box => {
+            var boxClass = box.getAttribute('data-box');
+            var cards = box.querySelectorAll('.animal-card');
+            cards.forEach(card => {
+                totalPlaced++;
+                if(card.getAttribute('data-class') === boxClass) {
+                    totalCorrect++;
+                    card.style.borderColor = '#27ae60';
+                    card.style.background = '#e8f8f5';
+                } else {
+                    card.style.borderColor = '#e74c3c';
+                    card.style.background = '#fadbd8';
+                }
+            });
+        });
+
+        var res = document.getElementById('result');
+        if(totalPlaced < totalAnimals) {
+            res.textContent = `⚠️ Você organizou ${totalPlaced} de ${totalAnimals} animais. Coloque todos nas caixas antes de verificar!`;
+            res.style.color = "#d35400";
+        } else if(totalCorrect === totalAnimals) {
+            res.textContent = `🎉 PARABÉNS! Você acertou todos os ${totalAnimals} animais nas caixas certas!`;
+            res.style.color = "#27ae60";
+        } else {
+            res.textContent = `❌ Você acertou ${totalCorrect} de ${totalAnimals}. Os animais com borda vermelha precisam mudar de caixa!`;
+            res.style.color = "#c0392b";
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Jogos Educativos - ExploraSaberes</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #eef2f5 0%, #e6e9ef 100%); min-height: 100vh; color: #333; display: flex; flex-direction: column; }
+        header { background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%); color: white; text-align: center; padding: 2.5rem 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; letter-spacing: 1px; }
+        header p { font-size: 1.1rem; opacity: 0.9; }
+        .container { max-width: 1000px; margin: 3rem auto; padding: 0 1.5rem; flex: 1; }
+        .welcome-title { text-align: center; font-size: 1.8rem; color: #2c3e50; margin-bottom: 2rem; }
+        .grid-subjects { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; }
+        .subject-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.08); transition: transform 0.3s ease, box-shadow 0.3s ease; text-decoration: none; color: inherit; display: flex; flex-direction: column; }
+        .subject-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .subject-banner { height: 130px; display: flex; align-items: center; justify-content: center; font-size: 3.8rem; color: white; }
+        .subject-banner.historia { background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%); }
+        .subject-banner.ciencias { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .subject-banner.ingles { background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); }
+        .subject-content { padding: 1.5rem; text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .subject-content h2 { font-size: 1.5rem; color: #2c3e50; margin-bottom: 0.5rem; }
+        .subject-content p { color: #666; font-size: 0.95rem; margin-bottom: 1rem; }
+        .btn-enter { display: inline-block; color: white; padding: 0.7rem 1.5rem; border-radius: 25px; font-weight: bold; font-size: 0.95rem; }
+        footer { text-align: center; padding: 2rem; color: #7f8c8d; font-size: 0.9rem; border-top: 1px solid #e0e0e0; margin-top: auto; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🎓 Portal ExploraSaberes</h1>
+        <p>Escolha uma disciplina para começar sua aventura de aprendizado!</p>
+    </header>
+
+    <div class="container">
+        <h2 class="welcome-title">Qual matéria vamos explorar hoje?</h2>
+        
+        <div class="grid-subjects">
+            <!-- Portal História -->
+            <a href="historia/index_historia.html" class="subject-card">
+                <div class="subject-banner historia">🏛️</div>
+                <div class="subject-content">
+                    <h2>História</h2>
+                    <p>Viaje pelo tempo, conheça a formação das vilas, cidades, colonização e patrimônios históricos.</p>
+                    <span class="btn-enter" style="background:#ff7e5f;">Acessar Jogos ▶</span>
+                </div>
+            </a>
+
+            <!-- Portal Ciências -->
+            <a href="ciencias/index_ciencias.html" class="subject-card">
+                <div class="subject-banner ciencias">🔬</div>
+                <div class="subject-content">
+                    <h2>Ciências</h2>
+                    <p>Descubra o mundo animal: vertebrados, invertebrados, metamorfose, reprodução e respiração!</p>
+                    <span class="btn-enter" style="background:#11998e;">Acessar Jogos ▶</span>
+                </div>
+            </a>
+
+            <!-- Portal Inglês -->
+            <a href="ingles/index_ingles.html" class="subject-card">
+                <div class="subject-banner ingles">🔤</div>
+                <div class="subject-content">
+                    <h2>English Fun</h2>
+                    <p>Submarino dos animais marinhos, animais do zoológico, Day & Night e o Verb To Be!</p>
+                    <span class="btn-enter" style="background:#6a11cb;">Acessar Jogos ▶</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Portal ExploraSaberes - Jogos Educativos Multidisciplinares.</p>
+    </footer>
+
+</body>
+</html>

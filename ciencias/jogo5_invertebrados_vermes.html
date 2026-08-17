@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 5: Invertebrados e Cuidados com Vermes</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #eef9f5; color: #333; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ceebd5; }
+        .btn-back { background: #11998e; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #0e8076; }
+        h1 { color: #137333; font-size: 1.8rem; }
+
+        .instructions { background: #e6f4ea; padding: 12px 18px; border-radius: 8px; margin-bottom: 20px; color: #137333; font-weight: 500; }
+
+        .section-title { font-size: 1.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px; border-left: 4px solid #11998e; padding-left: 10px; }
+
+        .habits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin-bottom: 30px; }
+        .habit-card { background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .btn-toggle { background: #e2e8f0; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .btn-toggle.correto { background: #27ae60; color: white; }
+        .btn-toggle.errado { background: #e74c3c; color: white; }
+
+        .btn-check { background: #27ae60; color: white; border: none; padding: 12px 30px; font-size: 1.1rem; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn-check:hover { background: #219150; }
+
+        .result-box { margin-top: 20px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>🐛 Jogo 5: Invertebrados e Saúde</h1>
+        <a href="index_ciencias.html" class="btn-back">⬅ Voltar ao Portal de Ciências</a>
+    </div>
+
+    <div class="instructions">
+        💡 Marque cada atitude como <strong>PREVINE VERMES ✅</strong> ou <strong>RISCO DE DOENÇA ❌</strong> para manter a saúde do organismo em dia!
+    </div>
+
+    <div class="section-title">🛡️ Painel de Hábitos de Higiene e Prevenção</div>
+
+    <div class="habits-grid">
+        <div class="habit-card">
+            <span>🚰 Beber somente água fervida ou filtrada</span>
+            <button class="btn-toggle" onclick="toggleHabit(this)" data-ans="correto">Clique para definir</button>
+        </div>
+
+        <div class="habit-card">
+            <span>🍎 Lavar bem frutas, verduras e legumes</span>
+            <button class="btn-toggle" onclick="toggleHabit(this)" data-ans="correto">Clique para definir</button>
+        </div>
+
+        <div class="habit-card">
+            <span>🦶 Andar sempre descalço na terra e na lama</span>
+            <button class="btn-toggle" onclick="toggleHabit(this)" data-ans="errado">Clique para definir</button>
+        </div>
+
+        <div class="habit-card">
+            <span>🧼 Lavar as mãos após usar o banheiro e antes das refeições</span>
+            <button class="btn-toggle" onclick="toggleHabit(this)" data-ans="correto">Clique para definir</button>
+        </div>
+
+        <div class="habit-card">
+            <span>🥩 Comer carnes cruas ou malpassadas sem inspeção</span>
+            <button class="btn-toggle" onclick="toggleHabit(this)" data-ans="errado">Clique para definir</button>
+        </div>
+
+        <div class="habit-card">
+            <span>✂️ Manter as unhas limpas e cortadas</span>
+            <button class="btn-toggle" onclick="toggleHabit(this)" data-ans="correto">Clique para definir</button>
+        </div>
+    </div>
+
+    <button class="btn-check" onclick="checkHabits()">Verificar Atitudes 🏆</button>
+
+    <div id="result" class="result-box"></div>
+</div>
+
+<script>
+    function toggleHabit(btn) {
+        if(!btn.classList.contains('correto') && !btn.classList.contains('errado')) {
+            btn.classList.add('correto');
+            btn.textContent = "PREVINE ✅";
+        } else if(btn.classList.contains('correto')) {
+            btn.classList.remove('correto');
+            btn.classList.add('errado');
+            btn.textContent = "PERIGO ❌";
+        } else {
+            btn.classList.remove('errado');
+            btn.textContent = "Clique para definir";
+        }
+    }
+
+    function checkHabits() {
+        var buttons = document.querySelectorAll('.btn-toggle');
+        var correct = true;
+
+        buttons.forEach(btn => {
+            var expected = btn.getAttribute('data-ans');
+            if(expected === 'correto' && !btn.classList.contains('correto')) correct = false;
+            if(expected === 'errado' && !btn.classList.contains('errado')) correct = false;
+        });
+
+        var res = document.getElementById('result');
+        if(correct) {
+            res.textContent = "🎉 PARABÉNS! Você conhece todas as medidas para se prevenir dos vermes e manter a saúde!";
+            res.style.color = "#27ae60";
+        } else {
+            res.textContent = "❌ Algum hábito foi classificado incorretamente. Revise e tente novamente!";
+            res.style.color = "#c0392b";
+        }
+    }
+</script>
+
+</body>
+</html>

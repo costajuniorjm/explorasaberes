@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 3: Funcionamento dos Municípios</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #f0f4f8; color: #333; padding: 20px; }
+        .container { max-width: 950px; margin: 0 auto; background: white; padding: 25px; border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); border-top: 6px solid #1976d2; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #bbdefb; }
+        .btn-back { background: #1976d2; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #0d47a1; }
+        h1 { color: #1976d2; font-size: 1.8rem; }
+
+        .section-box { background: #fafafa; border: 2px solid #bbdefb; border-radius: 10px; padding: 20px; margin-bottom: 25px; }
+        .section-title { font-size: 1.25rem; color: #0d47a1; margin-bottom: 15px; font-weight: bold; }
+        .instructions { background: #e3f2fd; padding: 12px; border-radius: 6px; margin-bottom: 15px; color: #1565c0; font-weight: 500; }
+
+        /* Associação Interativa */
+        .matching-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .column { display: flex; flex-direction: column; gap: 12px; }
+        .column-title { font-weight: bold; font-size: 1.1rem; color: #1976d2; text-align: center; margin-bottom: 5px; }
+
+        .item-card { background: white; border: 2px solid #cbd5e1; border-radius: 8px; padding: 12px 15px; cursor: pointer; transition: all 0.2s; font-weight: bold; display: flex; align-items: center; min-height: 70px; }
+        .item-card:hover { border-color: #1976d2; background: #e3f2fd; }
+        .item-card.selected { border-color: #f39c12; background: #fef9e7; }
+        .item-card.matched { border-color: #27ae60; background: #e8f8f5; opacity: 0.85; cursor: default; }
+
+        /* Complete as Lacunas */
+        .fill-list { display: flex; flex-direction: column; gap: 14px; }
+        .fill-card { background: white; border: 2px solid #e0e0e0; border-radius: 8px; padding: 14px 18px; line-height: 1.8; font-size: 1.05rem; color: #2c3e50; transition: border-color 0.2s, background-color 0.2s; }
+        
+        .fill-select { padding: 5px 10px; border-radius: 6px; border: 2px solid #1976d2; font-weight: bold; color: #0d47a1; background: #e3f2fd; font-size: 0.95rem; cursor: pointer; margin: 0 4px; display: inline-block; }
+        .fill-select:focus { outline: none; border-color: #f39c12; }
+
+        .btn-check { background: #27ae60; color: white; border: none; padding: 14px 25px; font-size: 1.15rem; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 20px; transition: background 0.2s; }
+        .btn-check:hover { background: #219150; }
+
+        .result-box { margin-top: 20px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>🏢 Jogo 3: Funcionamento dos Municípios</h1>
+        <a href="index_historia.html" class="btn-back">⬅ Voltar ao Portal de História</a>
+    </div>
+
+    <!-- PARTE 1: ASSOCIAÇÃO DO PODER PÚBLICO -->
+    <div class="section-box">
+        <div class="section-title">🔗 Desafio 1: Conecte os Órgãos e Responsabilidades</div>
+        <div class="instructions">
+            Clique em um item da coluna da esquerda e depois na sua função correspondente à direita!
+        </div>
+
+        <div class="matching-grid">
+            <div class="column" id="col-left">
+                <div class="column-title">Órgãos / Pessoas</div>
+                <div class="item-card" data-id="1">🏛️ Prefeito</div>
+                <div class="item-card" data-id="2">⚖️ Vereadores</div>
+                <div class="item-card" data-id="3">🗳️ Voto dos Moradores</div>
+                <div class="item-card" data-id="4">📍 Sede do Município</div>
+            </div>
+
+            <div class="column" id="col-right">
+                <div class="column-title">Função e Atuação</div>
+                <div class="item-card" data-match="2">Trabalham na Câmara Municipal e ajudam o prefeito criando as leis para proteger a cidade.</div>
+                <div class="item-card" data-match="4">É a cidade que abriga a prefeitura e a câmara de vereadores.</div>
+                <div class="item-card" data-match="1">É como o "chefe" do município. Trabalha na prefeitura e cuida das escolas, hospitais e limpeza.</div>
+                <div class="item-card" data-match="3">Forma como nós mesmos, os moradores, escolhemos os representantes de 4 em 4 anos.</div>
+            </div>
+        </div>
+
+        <div style="text-align: center; font-weight: bold; color: #27ae60;" id="pairs-msg">
+            Pares conectados: <span id="pairs-count">0</span> / 4
+        </div>
+    </div>
+
+    <!-- PARTE 2: COMPLETE AS 11 LACUNAS -->
+    <div class="section-box">
+        <div class="section-title">✍️ Desafio 2: Complete as Lacunas do Município</div>
+        <div class="instructions">
+            Escolha a palavra correta em cada lacuna para completar as 11 frases sobre o município:
+        </div>
+
+        <div class="fill-list">
+            <!-- Frase 1 -->
+            <div class="fill-card" id="fcard-1">
+                1. O 
+                <select class="fill-select" id="fill-1" data-correct="municipio">
+                    <option value="">[ Escolha ]</option>
+                    <option value="municipio">Município</option>
+                    <option value="continente">Continente</option>
+                    <option value="oceano">Oceano</option>
+                </select>
+                é uma área que possui uma sede (a cidade), um prefeito e uma Câmara de vereadores.
+            </div>
+
+            <!-- Frase 2 -->
+            <div class="fill-card" id="fcard-2">
+                2. A 
+                <select class="fill-select" id="fill-2" data-correct="prefeitura">
+                    <option value="">[ Escolha ]</option>
+                    <option value="igreja">Igreja</option>
+                    <option value="prefeitura">Prefeitura</option>
+                    <option value="escola">Escola</option>
+                </select>
+                é o setor responsável por toda a administração do município.
+            </div>
+
+            <!-- Frase 3 -->
+            <div class="fill-card" id="fcard-3">
+                3. Na Prefeitura trabalham o prefeito, o vice-prefeito e os 
+                <select class="fill-select" id="fill-3" data-correct="secretarios">
+                    <option value="">[ Escolha ]</option>
+                    <option value="secretarios">secretários</option>
+                    <option value="donatarios">donatários</option>
+                    <option value="marinheiros">marinheiros</option>
+                </select>.
+            </div>
+
+            <!-- Frase 4 -->
+            <div class="fill-card" id="fcard-4">
+                4. O 
+                <select class="fill-select" id="fill-4" data-correct="prefeito">
+                    <option value="">[ Escolha ]</option>
+                    <option value="imperador">Imperador</option>
+                    <option value="prefeito">Prefeito</option>
+                    <option value="governador">Governador</option>
+                </select>
+                é considerado como o "chefe" do município.
+            </div>
+
+            <!-- Frase 5 -->
+            <div class="fill-card" id="fcard-5">
+                5. O local onde o prefeito trabalha todos os dias administrando a cidade é na 
+                <select class="fill-select" id="fill-5" data-correct="prefeitura">
+                    <option value="">[ Escolha ]</option>
+                    <option value="prefeitura">Prefeitura</option>
+                    <option value="cadeia">Cadeia</option>
+                    <option value="fazenda">Fazenda</option>
+                </select>.
+            </div>
+
+            <!-- Frase 6 -->
+            <div class="fill-card" id="fcard-6">
+                6. A 
+                <select class="fill-select" id="fill-6" data-correct="camara">
+                    <option value="">[ Escolha ]</option>
+                    <option value="camara">Câmara Municipal</option>
+                    <option value="praca">Praça Central</option>
+                    <option value="biblioteca">Biblioteca</option>
+                </select>
+                é o setor responsável pela criação de leis para proteger a cidade.
+            </div>
+
+            <!-- Frase 7 -->
+            <div class="fill-card" id="fcard-7">
+                7. As pessoas que trabalham na Câmara Municipal são os 
+                <select class="fill-select" id="fill-7" data-correct="vereadores">
+                    <option value="">[ Escolha ]</option>
+                    <option value="vereadores">vereadores</option>
+                    <option value="jesuitas">jesuítas</option>
+                    <option value="indigenas">indígenas</option>
+                </select>.
+            </div>
+
+            <!-- Frase 8 -->
+            <div class="fill-card" id="fcard-8">
+                8. Os vereadores ajudam o prefeito criando 
+                <select class="fill-select" id="fill-8" data-correct="leis">
+                    <option value="">[ Escolha ]</option>
+                    <option value="jogos">jogos</option>
+                    <option value="leis">leis</option>
+                    <option value="ruas">ruas</option>
+                </select>
+                para proteger o município e organizar a convivência.
+            </div>
+
+            <!-- Frase 9 -->
+            <div class="fill-card" id="fcard-9">
+                9. Quem escolhe o prefeito e os vereadores somos nós mesmos, os moradores, através do 
+                <select class="fill-select" id="fill-9" data-correct="voto">
+                    <option value="">[ Escolha ]</option>
+                    <option value="sorteio">sorteio</option>
+                    <option value="voto">voto</option>
+                    <option value="comercio">comércio</option>
+                </select>
+                de 4 em 4 anos.
+            </div>
+
+            <!-- Frase 10 -->
+            <div class="fill-card" id="fcard-10">
+                10. O 
+                <select class="fill-select" id="fill-10" data-correct="censo">
+                    <option value="">[ Escolha ]</option>
+                    <option value="censo">Censo</option>
+                    <option value="pelourinho">Pelourinho</option>
+                    <option value="quilombo">Quilombo</option>
+                </select>
+                é uma pesquisa que visita todos os domicílios do Brasil para contar quantas pessoas moram e saber onde construir hospitais, escolas e parquinhos.
+            </div>
+
+            <!-- Frase 11 -->
+            <div class="fill-card" id="fcard-11">
+                11. 
+                <select class="fill-select" id="fill-11" data-correct="vilavelha">
+                    <option value="">[ Escolha ]</option>
+                    <option value="vilavelha">Vila Velha</option>
+                    <option value="salvador">Salvador</option>
+                    <option value="saovicente">São Vicente</option>
+                </select>
+                é a cidade mais antiga do Espírito Santo, fundada em 1535 por Vasco Fernandes Coutinho!
+            </div>
+        </div>
+
+        <button class="btn-check" onclick="checkAllGame3()">Verificar Respostas do Jogo 3 🏆</button>
+        <div id="result-g3" class="result-box"></div>
+    </div>
+</div>
+
+<script>
+    // Associação
+    let selLeft = null, selRight = null, matched = 0;
+    const lCards = document.querySelectorAll('#col-left .item-card');
+    const rCards = document.querySelectorAll('#col-right .item-card');
+
+    lCards.forEach(c => c.addEventListener('click', () => {
+        if (c.classList.contains('matched')) return;
+        lCards.forEach(x => x.classList.remove('selected'));
+        c.classList.add('selected');
+        selLeft = c;
+        checkMatch();
+    }));
+
+    rCards.forEach(c => c.addEventListener('click', () => {
+        if (c.classList.contains('matched')) return;
+        rCards.forEach(x => x.classList.remove('selected'));
+        c.classList.add('selected');
+        selRight = c;
+        checkMatch();
+    }));
+
+    function checkMatch() {
+        if (selLeft && selRight) {
+            if (selLeft.getAttribute('data-id') === selRight.getAttribute('data-match')) {
+                selLeft.className = 'item-card matched';
+                selRight.className = 'item-card matched';
+                selLeft = null; selRight = null;
+                matched++;
+                document.getElementById('pairs-count').textContent = matched;
+            } else {
+                setTimeout(() => {
+                    if (selLeft) selLeft.classList.remove('selected');
+                    if (selRight) selRight.classList.remove('selected');
+                    selLeft = null; selRight = null;
+                }, 400);
+            }
+        }
+    }
+
+    function checkAllGame3() {
+        let fillScore = 0;
+        let answered = 0;
+        const totalFills = 11;
+
+        for (let i = 1; i <= totalFills; i++) {
+            const select = document.getElementById(`fill-${i}`);
+            const card = document.getElementById(`fcard-${i}`);
+            const correct = select.getAttribute('data-correct');
+            const val = select.value;
+
+            if (val !== "") {
+                answered++;
+                if (val === correct) {
+                    fillScore++;
+                    card.style.borderColor = '#27ae60';
+                    card.style.backgroundColor = '#e8f8f5';
+                } else {
+                    card.style.borderColor = '#e74c3c';
+                    card.style.backgroundColor = '#fadbd8';
+                }
+            } else {
+                card.style.borderColor = '#e0e0e0';
+                card.style.backgroundColor = 'white';
+            }
+        }
+
+        const res = document.getElementById('result-g3');
+        if (matched < 4) {
+            res.textContent = `⚠️ Conecte todos os 4 pares do Desafio 1 antes de verificar!`;
+            res.style.color = "#d35400";
+        } else if (answered < totalFills) {
+            res.textContent = `⚠️ Preencha todas as 11 lacunas do Desafio 2 antes de verificar!`;
+            res.style.color = "#d35400";
+        } else if (matched === 4 && fillScore === totalFills) {
+            res.textContent = "🎉 PARABÉNS! Você completou todas as frases sobre o funcionamento dos municípios com 100% de acertos!";
+            res.style.color = "#27ae60";
+        } else {
+            res.textContent = `❌ Você acertou ${matched + fillScore} de 15 pontos no total. Corrija as frases em vermelho e tente novamente!`;
+            res.style.color = "#c0392b";
+        }
+    }
+</script>
+
+</body>
+</html>

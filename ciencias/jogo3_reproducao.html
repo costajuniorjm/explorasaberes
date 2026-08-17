@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 3: Reprodução dos Animais</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #eef9f5; color: #333; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ceebd5; }
+        .btn-back { background: #11998e; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #0e8076; }
+        h1 { color: #137333; font-size: 1.8rem; }
+
+        .instructions { background: #e6f4ea; padding: 12px 18px; border-radius: 8px; margin-bottom: 20px; color: #137333; font-weight: 500; }
+
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .card-item { background: #f8fafc; border: 2px solid #cbd5e1; border-radius: 10px; padding: 15px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between; transition: border-color 0.2s; }
+        
+        .card-img-wrap { width: 75px; height: 75px; border-radius: 8px; overflow: hidden; background: #e2e8f0; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+        .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        .fallback-icon { font-size: 2.2rem; line-height: 75px; }
+
+        .card-title { font-weight: bold; font-size: 1.05rem; color: #2c3e50; margin-bottom: 10px; }
+
+        select { width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #94a3b8; font-weight: 500; background: white; cursor: pointer; }
+
+        .btn-check { background: #27ae60; color: white; border: none; padding: 12px 30px; font-size: 1.1rem; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: background 0.2s; }
+        .btn-check:hover { background: #219150; }
+
+        .result-box { margin-top: 20px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>🥚 Jogo 3: Modos de Reprodução</h1>
+        <a href="index_ciencias.html" class="btn-back">⬅ Voltar ao Portal de Ciências</a>
+    </div>
+
+    <div class="instructions">
+        💡 Classifique cada um dos <strong>12 animais</strong> em:<br>
+        • <strong>Ovíparo:</strong> O filhote se desenvolve dentro de um ovo fora do corpo da mãe.<br>
+        • <strong>Vivíparo:</strong> O filhote se desenvolve no útero, dentro da barriga da mãe.<br>
+        • <strong>Ovovivíparo:</strong> O embrião se desenvolve em um ovo que fica guardado dentro do corpo da mãe até o nascimento.
+    </div>
+
+    <div class="cards-grid">
+        <!-- 1. Galinha -->
+        <div class="card-item" id="card-1">
+            <div class="card-img-wrap">
+                <img src="../img/ciencias/galinha.jpg" alt="Galinha" onerror="showIconFallback(this, '🐔')">
+            </div>
+            <div class="card-title">Galinha</div>
+            <select id="rep-1" data-correct="oviparo">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <!-- 2. Gato -->
+        <div class="card-item" id="card-2">
+            <div class="card-img-wrap">
+                <img src="../img/ciencias/gato.jpg" alt="Gato" onerror="showIconFallback(this, '🐱')">
+            </div>
+            <div class="card-title">Gato</div>
+            <select id="rep-2" data-correct="viviparo">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <!-- 3. Cobra Jararaca -->
+        <div class="card-item" id="card-3">
+            <div class="card-img-wrap">
+                <img src="../img/ciencias/jararaca.jpg" alt="Cobra Jararaca" onerror="showIconFallback(this, '🐍')">
+            </div>
+            <div class="card-title">Cobra Jararaca</div>
+            <select id="rep-3" data-correct="ovoviviparo">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <!-- 4. Elefante -->
+        <div class="card-item" id="card-4">
+            <div class="card-img-wrap">
+                <img src="../img/ciencias/elefante.jpg" alt="Elefante" onerror="showIconFallback(this, '🐘')">
+            </div>
+            <div class="card-title">Elefante</div>
+            <select id="rep-4" data-correct="viviparo">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <!-- 5. Tartaruga -->
+        <div class="card-item" id="card-5">
+            <div class="card-img-wrap">
+                <img src="../img/ciencias/tartaruga.jpg" alt="Tartaruga" onerror="showIconFallback(this, '🐢')">
+            </div>
+            <div class="card-title">Tartaruga-do-Amazonas</div>
+            <select id="rep-5" data-correct="oviparo">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <!-- 6. Tubarão -->
+        <div class="card-item" id="card-6">
+            <div class="card-img-wrap">
+                <img src="../img/ciencias/tubarao_femea.jpg" alt="Tubarão" onerror="showIconFallback(this, '🦈')">
+            </div>
+            <div class="card-title">Alguns Tubarões</div>
+            <select id="rep-6" data-correct="ovoviviparo">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <!-- 7. Vaca -->
+        <div class="card-item" id="card-7">
+            <div class="card-img-wrap">
+                <img src="../img/ciencias/vaca.jpg" alt="Vaca" onerror="showIconFallback(this, '🐮')">
+            </div>
+            <div class="card-title">Vaca</div>
+            <select id="rep-7" data-correct="viviparo">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <!-- 8. Avestruz -->
+        <div class="card-item" id="card-8">
+            <div class="card-img-wrap">
+                <img src="../img/ciencias/avestruz.jpg" alt="Avestruz" onerror="showIconFallback(this, '🦩')">
+            </div>
+            <div class="card-title">Avestruz</div>
+            <select id="rep-8" data-correct="oviparo">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <!-- 9. Cavalo / Égua -->
+        <div class="card-item" id="card-9">
+            <div class="card-img-wrap">
+                <img src="../img/ciencias/cavalo.jpg" alt="Cavalo" onerror="showIconFallback(this, '🐴')">
+            </div>
+            <div class="card-title">Cavalo / Égua</div>
+            <select id="rep-9" data-correct="viviparo">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <!-- 10. Jacaré-de-papo-amarelo -->
+        <div class="card-item" id="card-10">
+            <div class="card-img-wrap">
+                <img src="../img/ciencias/jacare.jpg" alt="Jacaré" onerror="showIconFallback(this, '🐊')">
+            </div>
+            <div class="card-title">Jacaré-de-papo-amarelo</div>
+            <select id="rep-10" data-correct="oviparo">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <!-- 11. Urso -->
+        <div class="card-item" id="card-11">
+            <div class="card-img-wrap">
+                <img src="../img/ciencias/urso.jpg" alt="Urso" onerror="showIconFallback(this, '🐻')">
+            </div>
+            <div class="card-title">Urso</div>
+            <select id="rep-11" data-correct="viviparo">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+
+        <!-- 12. Pato -->
+        <div class="card-item" id="card-12">
+            <div class="card-img-wrap">
+                <img src="../img/ciencias/pato.jpg" alt="Pato" onerror="showIconFallback(this, '🦆')">
+            </div>
+            <div class="card-title">Pato</div>
+            <select id="rep-12" data-correct="oviparo">
+                <option value="">-- Classifique --</option>
+                <option value="oviparo">Ovíparo</option>
+                <option value="viviparo">Vivíparo</option>
+                <option value="ovoviviparo">Ovovivíparo</option>
+            </select>
+        </div>
+    </div>
+
+    <button class="btn-check" onclick="checkReproduction()">Verificar Classificação 🏆</button>
+
+    <div id="result" class="result-box"></div>
+</div>
+
+<script>
+    function showIconFallback(imgElement, emoji) {
+        imgElement.onerror = null; // impede loop
+        const parent = imgElement.parentElement;
+        parent.innerHTML = `<span class="fallback-icon">${emoji}</span>`;
+    }
+
+    function checkReproduction() {
+        const total = 12;
+        let score = 0;
+        let answered = 0;
+
+        for (let i = 1; i <= total; i++) {
+            const select = document.getElementById(`rep-${i}`);
+            const card = document.getElementById(`card-${i}`);
+            const correct = select.getAttribute('data-correct');
+            const val = select.value;
+
+            if (val !== "") {
+                answered++;
+                if (val === correct) {
+                    score++;
+                    card.style.borderColor = "#27ae60";
+                    card.style.backgroundColor = "#e8f8f5";
+                } else {
+                    card.style.borderColor = "#e74c3c";
+                    card.style.backgroundColor = "#fadbd8";
+                }
+            } else {
+                card.style.borderColor = "#cbd5e1";
+                card.style.backgroundColor = "#f8fafc";
+            }
+        }
+
+        const res = document.getElementById('result');
+        if (answered < total) {
+            res.textContent = `⚠️ Você respondeu ${answered} de ${total} animais. Classifique todos antes de verificar!`;
+            res.style.color = "#d35400";
+        } else if (score === total) {
+            res.textContent = `🎉 EXCELENTE! Você acertou todos os ${total} animais perfeitamente!`;
+            res.style.color = "#27ae60";
+        } else {
+            res.textContent = `❌ Você acertou ${score} de ${total}. Os cartões vermelhos precisam de correção!`;
+            res.style.color = "#c0392b";
+        }
+    }
+</script>
+
+</body>
+</html>

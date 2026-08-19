@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Geografia - ExploraSaberes</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #fdfaf6; color: #333; }
+        header { background: linear-gradient(135deg, #e67e22 0%, #f39c12 100%); color: white; padding: 2.2rem 1rem; text-align: center; position: relative; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .btn-home { position: absolute; left: 20px; top: 20px; background: rgba(255,255,255,0.25); color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; font-weight: bold; transition: 0.2s; }
+        .btn-home:hover { background: rgba(255,255,255,0.4); }
+        .container { max-width: 1000px; margin: 2.5rem auto; padding: 0 1.5rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.8rem; }
+        .card { background: white; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 18px rgba(0,0,0,0.06); border: 2px solid #fce4d6; display: flex; flex-direction: column; }
+        .card-header { background: #fdf2e9; padding: 1.2rem; border-bottom: 2px solid #fce4d6; color: #b94a00; font-weight: bold; font-size: 1.15rem; }
+        .card-body { padding: 1.4rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-body p { color: #555; line-height: 1.5; margin-bottom: 1.2rem; }
+        .btn-play { display: block; text-align: center; background: #e67e22; color: white; text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; transition: background 0.2s; }
+        .btn-play:hover { background: #b94a00; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="../index.html" class="btn-home">⬅ Menu Principal</a>
+        <h1>🌍 Portal de Geografia</h1>
+        <p>Aprenda sobre orientação espacial, rosa dos ventos, mapas e elementos cartográficos!</p>
+    </header>
+
+    <div class="container">
+        <div class="grid">
+            <!-- Jogo 1 -->
+            <div class="card">
+                <div class="card-header">🧭 Jogo 1: Orientação no Bairro do Rodrigo</div>
+                <div class="card-body">
+                    <p>Mova a <strong>boneca</strong> pelo mapa do bairro usando os pontos cardeais e colaterais (Cinema, Padaria, Correios, Igreja, Museu, etc.).</p>
+                    <a href="jogo1_orientacao_bairro.html" class="btn-play">Jogar Bairro & Rosa dos Ventos ▶</a>
+                </div>
+            </div>
+
+            <!-- Jogo 2 -->
+            <div class="card">
+                <div class="card-header">☀️ Jogo 2: Orientação pelo Sol & O Quarto do Menino</div>
+                <div class="card-body">
+                    <p>Descubra a nascente (Leste) e poente (Oeste) usando o corpo, e avalie a planta do quarto (Certo ou Errado).</p>
+                    <a href="jogo2_sol_quarto_menino.html" class="btn-play">Jogar Sol & Quarto ▶</a>
+                </div>
+            </div>
+
+            <!-- Jogo 3 -->
+            <div class="card">
+                <div class="card-header">🗺️ Jogo 3: Elementos do Mapa & A Escola</div>
+                <div class="card-body">
+                    <p>Identifique o <strong>Título, Rosa dos Ventos, Escala e Legenda</strong>, e conheça a importância dos funcionários da educação.</p>
+                    <a href="jogo3_elementos_mapa_escola.html" class="btn-play">Jogar Elementos do Mapa ▶</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

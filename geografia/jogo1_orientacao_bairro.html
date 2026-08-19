@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 1: Orientação no Bairro com o Nayo</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #fdfaf6; color: #333; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 25px; border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); border-top: 6px solid #d35400; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #fce4d6; }
+        .btn-back { background: #d35400; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #a04000; }
+        h1 { color: #d35400; font-size: 1.8rem; }
+
+        .section-box { background: #fafafa; border: 2px solid #fce4d6; border-radius: 10px; padding: 20px; margin-bottom: 25px; }
+        .section-title { font-size: 1.25rem; color: #b94a00; margin-bottom: 15px; font-weight: bold; }
+        .instructions { background: #fdf2e9; padding: 12px; border-radius: 6px; margin-bottom: 15px; color: #935116; font-weight: 500; }
+
+        /* MAPA INTERATIVO EM GRID 3x3 */
+        .map-wrapper { position: relative; max-width: 720px; margin: 0 auto 20px auto; }
+        .neighborhood-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; background: #e5e8e8; padding: 15px; border-radius: 12px; border: 3px solid #bdc3c7; }
+        
+        .map-cell { background: white; border: 2px solid #d5dbdb; border-radius: 10px; padding: 10px; min-height: 125px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; transition: all 0.3s; }
+        .map-cell.active-target { border-color: #e67e22; background: #fef5e7; transform: scale(1.03); box-shadow: 0 4px 10px rgba(230,126,34,0.3); }
+        .map-cell.center-cell { background: #eaeded; border: 3px dashed #7f8c8d; }
+
+        .cell-icon { font-size: 2.2rem; margin-bottom: 4px; }
+        .cell-name { font-weight: bold; font-size: 0.95rem; color: #2c3e50; }
+        .cell-direction-tag { font-size: 0.75rem; font-weight: bold; color: #7f8c8d; margin-top: 4px; background: #f2f4f4; padding: 2px 6px; border-radius: 4px; }
+
+        /* Avatar do Nayo */
+        .avatar-player-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; animation: pulseAvatar 1.5s infinite; }
+        .nayo-img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 3px solid #e67e22; background: white; box-shadow: 0 4px 8px rgba(0,0,0,0.25); }
+        @keyframes pulseAvatar { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+
+        /* Painel da Rosa dos Ventos e Controles */
+        .navigation-panel { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-around; background: #fdfefe; border: 2px solid #eaeded; padding: 15px; border-radius: 10px; margin-top: 15px; }
+        .compass-rose-box { text-align: center; }
+        .compass-img { width: 140px; height: 140px; }
+
+        .mission-box { flex: 1; min-width: 280px; text-align: center; }
+        .mission-prompt { font-size: 1.2rem; font-weight: bold; color: #d35400; margin-bottom: 12px; }
+        .direction-buttons-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 320px; margin: 0 auto; }
+        .btn-dir { background: #34495e; color: white; border: none; padding: 10px 4px; font-weight: bold; border-radius: 6px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .btn-dir:hover { background: #e67e22; }
+        .btn-dir.center-dir { background: #95a5a6; }
+
+        /* Perguntas de Fixação */
+        .grid-questions { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 15px; }
+        .q-card { background: white; border: 2px solid #eaeded; border-radius: 8px; padding: 12px; display: flex; align-items: center; justify-content: space-between; font-weight: 500; font-size: 0.95rem; }
+        .q-card select { padding: 6px 10px; border-radius: 6px; border: 2px solid #d35400; font-weight: bold; color: #d35400; background: #fdfefe; }
+
+        .btn-check-all { background: #27ae60; color: white; border: none; padding: 14px 25px; font-size: 1.15rem; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 20px; transition: background 0.2s; }
+        .btn-check-all:hover { background: #219150; }
+        .result-box { margin-top: 15px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>🧭 Jogo 1: Orientação no Bairro com o Nayo</h1>
+        <a href="index_geografia.html" class="btn-back">⬅ Voltar ao Portal de Geografia</a>
+    </div>
+
+    <!-- DESAFIO 1: MAPA INTERATIVO COM NAYO -->
+    <div class="section-box">
+        <div class="section-title">🗺️ Desafio 1: Navegação pelos Pontos Cardeais e Colaterais</div>
+        <div class="instructions">
+            O <strong>Nayo</strong> está no centro do bairro. Clique nos botões da <strong>Rosa dos Ventos</strong> para mover o Nayo pelas direções cardeais e colaterais e ver onde ele chega!
+        </div>
+
+        <div class="map-wrapper">
+            <div class="neighborhood-grid">
+                <!-- Noroeste (NO) -->
+                <div class="map-cell" id="cell-no">
+                    <span class="cell-icon">🎬</span>
+                    <span class="cell-name">Cinema</span>
+                    <span class="cell-direction-tag">Noroeste (NO)</span>
+                </div>
+
+                <!-- Norte (N) -->
+                <div class="map-cell" id="cell-n">
+                    <span class="cell-icon">📬</span>
+                    <span class="cell-name">Correios</span>
+                    <span class="cell-direction-tag">Norte (N)</span>
+                </div>
+
+                <!-- Nordeste (NE) -->
+                <div class="map-cell" id="cell-ne">
+                    <span class="cell-icon">🥖</span>
+                    <span class="cell-name">Padaria</span>
+                    <span class="cell-direction-tag">Nordeste (NE)</span>
+                </div>
+
+                <!-- Oeste (O) -->
+                <div class="map-cell" id="cell-o">
+                    <span class="cell-icon">📰</span>
+                    <span class="cell-name">Banca de Jornal</span>
+                    <span class="cell-direction-tag">Oeste (O)</span>
+                </div>
+
+                <!-- Centro -->
+                <div class="map-cell center-cell" id="cell-center">
+                    <div class="avatar-player-wrap" id="player-avatar">
+                        <img src="../img/ingles/Nayo.png" alt="Nayo" class="nayo-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\'><circle cx=\'50\' cy=\'50\' r=\'50\' fill=\'%23e67e22\'/><text x=\'50\' y=\'65\' font-size=\'45\' text-anchor=\'middle\' fill=\'white\'>👦</text></svg>'">
+                    </div>
+                    <span class="cell-name" style="margin-top:4px; font-size:0.85rem;">Centro (Nayo)</span>
+                </div>
+
+                <!-- Leste (L) -->
+                <div class="map-cell" id="cell-l">
+                    <span class="cell-icon">📚</span>
+                    <span class="cell-name">Papelaria</span>
+                    <span class="cell-direction-tag">Leste (L)</span>
+                </div>
+
+                <!-- Sudoeste (SO) -->
+                <div class="map-cell" id="cell-so">
+                    <span class="cell-icon">🛍️</span>
+                    <span class="cell-name">Shopping Center</span>
+                    <span class="cell-direction-tag">Sudoeste (SO)</span>
+                </div>
+
+                <!-- Sul (S) -->
+                <div class="map-cell" id="cell-s">
+                    <span class="cell-icon">⛪</span>
+                    <span class="cell-name">Igreja</span>
+                    <span class="cell-direction-tag">Sul (S)</span>
+                </div>
+
+                <!-- Sudeste (SE) -->
+                <div class="map-cell" id="cell-se">
+                    <span class="cell-icon">🏛️</span>
+                    <span class="cell-name">Museu</span>
+                    <span class="cell-direction-tag">Sudeste (SE)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation-panel">
+            <div class="compass-rose-box">
+                <svg viewBox="0 0 100 100" class="compass-img">
+                    <circle cx="50" cy="50" r="45" fill="#fdfefe" stroke="#bdc3c7" stroke-width="2"/>
+                    <!-- Cardeais -->
+                    <polygon points="50,10 54,46 50,50 46,46" fill="#e74c3c"/>
+                    <polygon points="50,90 54,54 50,50 46,54" fill="#34495e"/>
+                    <polygon points="90,50 54,54 50,50 54,46" fill="#34495e"/>
+                    <polygon points="10,50 46,54 50,50 46,46" fill="#34495e"/>
+                    <!-- Colaterais -->
+                    <polygon points="78,22 53,47 50,50 47,53" fill="#f39c12"/>
+                    <polygon points="22,78 47,53 50,50 53,47" fill="#f39c12"/>
+                    <polygon points="22,22 47,47 50,50 53,53" fill="#f39c12"/>
+                    <polygon points="78,78 53,53 50,50 47,47" fill="#f39c12"/>
+                    <!-- Letras -->
+                    <text x="50" y="8" text-anchor="middle" font-size="8" font-weight="bold" fill="#e74c3c">N</text>
+                    <text x="50" y="99" text-anchor="middle" font-size="8" font-weight="bold" fill="#2c3e50">S</text>
+                    <text x="96" y="53" text-anchor="middle" font-size="8" font-weight="bold" fill="#2c3e50">L</text>
+                    <text x="4" y="53" text-anchor="middle" font-size="8" font-weight="bold" fill="#2c3e50">O</text>
+                    <text x="82" y="19" font-size="6" font-weight="bold" fill="#d35400">NE</text>
+                    <text x="18" y="19" font-size="6" font-weight="bold" fill="#d35400">NO</text>
+                    <text x="82" y="86" font-size="6" font-weight="bold" fill="#d35400">SE</text>
+                    <text x="18" y="86" font-size="6" font-weight="bold" fill="#d35400">SO</text>
+                </svg>
+            </div>
+
+            <div class="mission-box">
+                <div class="mission-prompt" id="mission-text">Clique nos botões para mover o Nayo:</div>
+                <div class="direction-buttons-grid">
+                    <button class="btn-dir" onclick="movePlayer('no')">NO</button>
+                    <button class="btn-dir" onclick="movePlayer('n')">Norte (N)</button>
+                    <button class="btn-dir" onclick="movePlayer('ne')">NE</button>
+                    <button class="btn-dir" onclick="movePlayer('o')">Oeste (O)</button>
+                    <button class="btn-dir center-dir" onclick="movePlayer('center')">Centro 🏠</button>
+                    <button class="btn-dir" onclick="movePlayer('l')">Leste (L)</button>
+                    <button class="btn-dir" onclick="movePlayer('so')">SO</button>
+                    <button class="btn-dir" onclick="movePlayer('s')">Sul (S)</button>
+                    <button class="btn-dir" onclick="movePlayer('se')">SE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DESAFIO 2: COMPLETE AS DIREÇÕES -->
+    <div class="section-box">
+        <div class="section-title">📝 Desafio 2: Identifique a Direção de Cada Estabelecimento</div>
+        <div class="instructions">
+            Indique a direção correta (ponto cardeal ou colateral) em que fica cada local em relação ao Nayo no centro:
+        </div>
+
+        <div class="grid-questions">
+            <div class="q-card" id="qcard-a">
+                <span>a) O <strong>cinema</strong> fica na direção:</span>
+                <select id="dir-a" data-correct="noroeste">
+                    <option value="">[ Selecione ]</option>
+                    <option value="norte">Norte (N)</option>
+                    <option value="noroeste">Noroeste (NO)</option>
+                    <option value="nordeste">Nordeste (NE)</option>
+                </select>
+            </div>
+
+            <div class="q-card" id="qcard-b">
+                <span>b) A <strong>igreja</strong> fica na direção:</span>
+                <select id="dir-b" data-correct="sul">
+                    <option value="">[ Selecione ]</option>
+                    <option value="sul">Sul (S)</option>
+                    <option value="sudoeste">Sudoeste (SO)</option>
+                    <option value="leste">Leste (L)</option>
+                </select>
+            </div>
+
+            <div class="q-card" id="qcard-c">
+                <span>c) A <strong>banca de jornal</strong> fica na direção:</span>
+                <select id="dir-c" data-correct="oeste">
+                    <option value="">[ Selecione ]</option>
+                    <option value="leste">Leste (L)</option>
+                    <option value="oeste">Oeste (O)</option>
+                    <option value="norte">Norte (N)</option>
+                </select>
+            </div>
+
+            <div class="q-card" id="qcard-d">
+                <span>d) A <strong>papelaria</strong> fica na direção:</span>
+                <select id="dir-d" data-correct="leste">
+                    <option value="">[ Selecione ]</option>
+                    <option value="leste">Leste (L)</option>
+                    <option value="oeste">Oeste (O)</option>
+                    <option value="sudeste">Sudeste (SE)</option>
+                </select>
+            </div>
+
+            <div class="q-card" id="qcard-e">
+                <span>e) O <strong>correio</strong> fica na direção:</span>
+                <select id="dir-e" data-correct="norte">
+                    <option value="">[ Selecione ]</option>
+                    <option value="norte">Norte (N)</option>
+                    <option value="sul">Sul (S)</option>
+                    <option value="nordeste">Nordeste (NE)</option>
+                </select>
+            </div>
+
+            <div class="q-card" id="qcard-f">
+                <span>f) O <strong>shopping</strong> fica na direção:</span>
+                <select id="dir-f" data-correct="sudoeste">
+                    <option value="">[ Selecione ]</option>
+                    <option value="sudeste">Sudeste (SE)</option>
+                    <option value="sudoeste">Sudoeste (SO)</option>
+                    <option value="sul">Sul (S)</option>
+                </select>
+            </div>
+
+            <div class="q-card" id="qcard-g">
+                <span>g) A <strong>padaria</strong> fica na direção:</span>
+                <select id="dir-g" data-correct="nordeste">
+                    <option value="">[ Selecione ]</option>
+                    <option value="nordeste">Nordeste (NE)</option>
+                    <option value="noroeste">Noroeste (NO)</option>
+                    <option value="leste">Leste (L)</option>
+                </select>
+            </div>
+
+            <div class="q-card" id="qcard-h">
+                <span>h) O <strong>museu</strong> fica na direção:</span>
+                <select id="dir-h" data-correct="sudeste">
+                    <option value="">[ Selecione ]</option>
+                    <option value="sudeste">Sudeste (SE)</option>
+                    <option value="sudoeste">Sudoeste (SO)</option>
+                    <option value="leste">Leste (L)</option>
+                </select>
+            </div>
+        </div>
+
+        <button class="btn-check-all" onclick="checkAllGame1()">Verificar Todas as Direções 🏆</button>
+        <div id="result-g1" class="result-box"></div>
+    </div>
+</div>
+
+<script>
+    const places = {
+        'n': { name: 'Correios 📬', label: 'Norte (N)' },
+        's': { name: 'Igreja ⛪', label: 'Sul (S)' },
+        'l': { name: 'Papelaria 📚', label: 'Leste (L)' },
+        'o': { name: 'Banca de Jornal 📰', label: 'Oeste (O)' },
+        'no': { name: 'Cinema 🎬', label: 'Noroeste (NO)' },
+        'ne': { name: 'Padaria 🥖', label: 'Nordeste (NE)' },
+        'so': { name: 'Shopping Center 🛍️', label: 'Sudoeste (SO)' },
+        'se': { name: 'Museu 🏛️', label: 'Sudeste (SE)' },
+        'center': { name: 'Centro da Praça 🏠', label: 'Ponto de Partida' }
+    };
+
+    function movePlayer(dirKey) {
+        document.querySelectorAll('.map-cell').forEach(c => c.classList.remove('active-target'));
+        const targetCell = document.getElementById(`cell-${dirKey}`);
+        if (targetCell) {
+            targetCell.classList.add('active-target');
+            const avatar = document.getElementById('player-avatar');
+            targetCell.appendChild(avatar);
+        }
+
+        const info = places[dirKey];
+        document.getElementById('mission-text').innerHTML = `O Nayo foi para o <strong>${info.label}</strong> e chegou em: <span style="color:#27ae60;">${info.name}</span>!`;
+    }
+
+    function checkAllGame1() {
+        const letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+        let score = 0;
+        let answered = 0;
+
+        letters.forEach(letter => {
+            const sel = document.getElementById(`dir-${letter}`);
+            const card = document.getElementById(`qcard-${letter}`);
+            const correct = sel.getAttribute('data-correct');
+
+            if (sel.value !== "") {
+                answered++;
+                if (sel.value === correct) {
+                    score++;
+                    card.style.borderColor = '#27ae60';
+                    card.style.backgroundColor = '#e8f8f5';
+                } else {
+                    card.style.borderColor = '#e74c3c';
+                    card.style.backgroundColor = '#fadbd8';
+                }
+            } else {
+                card.style.borderColor = '#eaeded';
+                card.style.backgroundColor = 'white';
+            }
+        });
+
+        const res = document.getElementById('result-g1');
+        if (answered < letters.length) {
+            res.textContent = `⚠️ Responda todas as 8 letras antes de verificar!`;
+            res.style.color = "#d35400";
+        } else if (score === letters.length) {
+            res.textContent = "🎉 PERFEITO! Você acertou todas as localizações cardeais e colaterais com o Nayo!";
+            res.style.color = "#27ae60";
+        } else {
+            res.textContent = `❌ Você acertou ${score} de ${letters.length}. Corrija as caixas vermelhas e tente de novo!`;
+            res.style.color = "#c0392b";
+        }
+    }
+</script>
+
+</body>
+</html>

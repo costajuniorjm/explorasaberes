@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 2: Bússola Solar & Planta Baixa Interativa</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #fdfaf6; color: #333; padding: 20px; }
+        .container { max-width: 950px; margin: 0 auto; background: white; padding: 25px; border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); border-top: 6px solid #e67e22; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #fce4d6; }
+        .btn-back { background: #e67e22; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #b94a00; }
+        h1 { color: #d35400; font-size: 1.8rem; }
+
+        .section-box { background: #fafafa; border: 2px solid #fce4d6; border-radius: 10px; padding: 20px; margin-bottom: 25px; }
+        .section-title { font-size: 1.25rem; color: #b94a00; margin-bottom: 15px; font-weight: bold; }
+        .instructions { background: #fdf2e9; padding: 12px; border-radius: 6px; margin-bottom: 15px; color: #935116; font-weight: 500; }
+
+        /* JOGO A: BÚSSOLA SOLAR DO CORPO */
+        .solar-scene { background: linear-gradient(180deg, #87ceeb 0%, #f9e79f 70%, #82e0aa 70%, #27ae60 100%); border-radius: 12px; padding: 25px; text-align: center; position: relative; border: 2px solid #f39c12; margin-bottom: 20px; min-height: 250px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
+        .sun-east { position: absolute; right: 25px; top: 20px; font-size: 3.5rem; filter: drop-shadow(0 0 12px #f39c12); }
+        .sun-west { position: absolute; left: 25px; top: 40px; font-size: 3rem; opacity: 0.6; filter: drop-shadow(0 0 6px #e67e22); }
+        
+        .human-figure-wrap { width: 110px; height: 130px; margin: 15px auto 10px auto; display: flex; align-items: center; justify-content: center; }
+        .homem-img { max-width: 100%; max-height: 100%; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+        
+        .body-labels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-top: 10px; width: 100%; }
+        .body-card { background: white; padding: 12px; border-radius: 8px; border: 2px solid #e0e0e0; display: flex; flex-direction: column; gap: 6px; font-size: 0.95rem; font-weight: bold; }
+        .body-card select { padding: 6px; border-radius: 6px; border: 2px solid #e67e22; font-weight: bold; color: #b94a00; }
+        .fb-text { font-size: 0.85rem; font-weight: bold; margin-top: 4px; display: none; }
+
+        /* JOGO B: PLANTA BAIXA VISUAL INTERATIVA */
+        .floorplan-wrapper { background: #fdfefe; border: 3px solid #34495e; border-radius: 12px; padding: 15px; margin-bottom: 20px; text-align: center; }
+        .floorplan-svg { width: 100%; max-width: 550px; height: auto; border: 2px solid #95a5a6; border-radius: 8px; background: #eaeded; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        
+        .room-inspector-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 15px; }
+        .inspect-card { background: white; border: 2px solid #bdc3c7; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; }
+        .inspect-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 1.05rem; font-weight: bold; color: #2c3e50; }
+        .inspect-desc { font-size: 0.95rem; color: #333; line-height: 1.4; margin-bottom: 12px; font-weight: 500; }
+        .inspect-card select { width: 100%; padding: 8px; border-radius: 6px; border: 2px solid #34495e; font-weight: bold; font-size: 0.95rem; }
+
+        .btn-check-all { background: #27ae60; color: white; border: none; padding: 14px 25px; font-size: 1.15rem; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 20px; transition: background 0.2s; }
+        .btn-check-all:hover { background: #219150; }
+        .result-box { margin-top: 15px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>☀️ Jogo 2: Bússola Solar & Planta Baixa Interativa</h1>
+        <a href="index_geografia.html" class="btn-back">⬅ Voltar ao Portal de Geografia</a>
+    </div>
+
+    <!-- JOGO A: A BÚSSOLA SOLAR DO CORPO -->
+    <div class="section-box">
+        <div class="section-title">🧍 Jogo A: A Bússola Solar do Corpo</div>
+        <div class="instructions">
+            Utilize o movimento diário do Sol e a posição dos braços abertos para identificar corretamente as direções cardeais:
+        </div>
+
+        <div class="solar-scene">
+            <div class="sun-west">🌅<br><span style="font-size:0.8rem; font-weight:bold; color:#78281f;">Poente (Sol se põe)</span></div>
+            <div class="sun-east">☀️<br><span style="font-size:0.8rem; font-weight:bold; color:#b7950b;">Nascente (Sol nasce)</span></div>
+            
+            <div class="human-figure-wrap">
+                <img src="../img/ingles/homem.png" alt="Homem com braços abertos" class="homem-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 120\'><circle cx=\'50\' cy=\'25\' r=\'15\' fill=\'%2334495e\'/><rect x=\'42\' y=\'40\' width=\'16\' height=\'40\' fill=\'%2334495e\'/><line x1=\'10\' y1=\'45\' x2=\'90\' y2=\'45\' stroke=\'%2334495e\' stroke-width=\'8\' stroke-linecap=\'round\'/><line x1=\'42\' y1=\'80\' x2=\'30\' y2=\'115\' stroke=\'%2334495e\' stroke-width=\'8\' stroke-linecap=\'round\'/><line x1=\'58\' y1=\'80\' x2=\'70\' y2=\'115\' stroke=\'%2334495e\' stroke-width=\'8\' stroke-linecap=\'round\'/></svg>'">
+            </div>
+            
+            <div style="font-weight:bold; color:#1e8449; background:rgba(255,255,255,0.9); padding:4px 12px; border-radius:15px; margin-top:5px;">
+                Braço direito estendido apontando para o Sol Nascente
+            </div>
+        </div>
+
+        <div class="body-labels-grid">
+            <div class="body-card" id="bcard-1">
+                <span>1. Braço Direito (onde o Sol nasce):</span>
+                <select id="bod-1" data-correct="leste" data-info="O Sol nasce a Leste (Nascente).">
+                    <option value="">[ Escolha a Direção ]</option>
+                    <option value="leste">Leste (Nascente)</option>
+                    <option value="oeste">Oeste (Poente)</option>
+                    <option value="norte">Norte</option>
+                </select>
+                <div class="fb-text" id="bfb-1"></div>
+            </div>
+
+            <div class="body-card" id="bcard-2">
+                <span>2. Braço Esquerdo (onde o Sol se põe):</span>
+                <select id="bod-2" data-correct="oeste" data-info="O Sol se põe a Oeste (Poente).">
+                    <option value="">[ Escolha a Direção ]</option>
+                    <option value="leste">Leste (Nascente)</option>
+                    <option value="oeste">Oeste (Poente)</option>
+                    <option value="sul">Sul</option>
+                </select>
+                <div class="fb-text" id="bfb-2"></div>
+            </div>
+
+            <div class="body-card" id="bcard-3">
+                <span>3. À Frente do Corpo:</span>
+                <select id="bod-3" data-correct="norte" data-info="À nossa frente fica o Norte (N).">
+                    <option value="">[ Escolha a Direção ]</option>
+                    <option value="norte">Norte (N)</option>
+                    <option value="sul">Sul (S)</option>
+                    <option value="oeste">Oeste (O)</option>
+                </select>
+                <div class="fb-text" id="bfb-3"></div>
+            </div>
+
+            <div class="body-card" id="bcard-4">
+                <span>4. Atrás do Corpo (Costas):</span>
+                <select id="bod-4" data-correct="sul" data-info="Atrás do nosso corpo fica o Sul (S).">
+                    <option value="">[ Escolha a Direção ]</option>
+                    <option value="norte">Norte (N)</option>
+                    <option value="sul">Sul (S)</option>
+                    <option value="leste">Leste (L)</option>
+                </select>
+                <div class="fb-text" id="bfb-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JOGO B: PLANTA BAIXA ARQUITETÔNICA COM LOCALIZAÇÃO DOS OBJETOS -->
+    <div class="section-box">
+        <div class="section-title">📐 Jogo B: Localização dos Objetos na Planta Baixa</div>
+        <div class="instructions">
+            Observe a <strong>planta baixa do quarto</strong> abaixo (com o Tapete no centro). Leia a afirmação sobre a localização de cada objeto em relação aos pontos cardeais e colaterais e escolha se a frase está <strong>CERTA (C)</strong> ou <strong>ERRADA (E)</strong>:
+        </div>
+
+        <div class="floorplan-wrapper">
+            <svg viewBox="0 0 500 350" class="floorplan-svg">
+                <!-- Paredes externas do quarto -->
+                <rect x="20" y="20" width="460" height="310" fill="#f8fafc" stroke="#2c3e50" stroke-width="8"/>
+                
+                <!-- Janela (Parede Superior / Norte) -->
+                <rect x="180" y="16" width="140" height="8" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+                <text x="250" y="42" font-size="12" font-weight="bold" fill="#2980b9" text-anchor="middle">🪟 Janela (Norte)</text>
+
+                <!-- Guarda-Roupa (Noroeste / NO) -->
+                <rect x="30" y="30" width="110" height="60" fill="#d35400" stroke="#a04000" stroke-width="2"/>
+                <line x1="85" y1="30" x2="85" y2="90" stroke="#fff" stroke-width="2"/>
+                <text x="85" y="65" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">Guarda-Roupa</text>
+
+                <!-- Cama (Nordeste / NE) -->
+                <rect x="330" y="30" width="140" height="90" fill="#34495e" stroke="#2c3e50" stroke-width="2" rx="4"/>
+                <rect x="420" y="40" width="40" height="70" fill="#ecf0f1" stroke="#bdc3c7" stroke-width="1" rx="4"/>
+                <text x="380" y="80" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">🛏️ Cama</text>
+
+                <!-- Tapete Central (Centro) -->
+                <ellipse cx="250" cy="180" rx="75" ry="45" fill="#f39c12" stroke="#d68910" stroke-width="2" stroke-dasharray="4"/>
+                <text x="250" y="185" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">Tapete (Centro)</text>
+
+                <!-- Mesinha de Estudos (Sudeste / SE) -->
+                <rect x="340" y="240" width="130" height="55" fill="#e67e22" stroke="#d35400" stroke-width="2" rx="3"/>
+                <text x="405" y="272" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">Mesa de Estudos</text>
+
+                <!-- Cadeira (Sudeste / SE) -->
+                <g transform="translate(375, 195)">
+                    <rect x="0" y="0" width="30" height="30" fill="#bdc3c7" stroke="#7f8c8d" stroke-width="2" rx="3"/>
+                    <text x="15" y="20" font-size="11" font-weight="bold" fill="#2c3e50" text-anchor="middle">🪑</text>
+                </g>
+
+                <!-- Porta (Sudoeste / SO) -->
+                <path d="M 30,330 A 60,60 0 0,1 90,270" fill="none" stroke="#27ae60" stroke-width="3" stroke-dasharray="3"/>
+                <line x1="30" y1="330" x2="30" y2="270" stroke="#27ae60" stroke-width="4"/>
+                <text x="75" y="315" font-size="11" font-weight="bold" fill="#27ae60">Porta 🚪</text>
+            </svg>
+        </div>
+
+        <div class="room-inspector-grid">
+            <!-- Item 1: Cama -->
+            <div class="inspect-card" id="icard-1">
+                <div class="inspect-header">🛏️ Cama</div>
+                <div class="inspect-desc">"A Cama está localizada a <strong>Nordeste (NE)</strong> em relação ao centro do quarto."</div>
+                <select id="insp-1" data-correct="C" data-info="A Cama fica a Nordeste (NE).">
+                    <option value="">[ Selecione ]</option>
+                    <option value="C">C - Certo</option>
+                    <option value="E">E - Errado</option>
+                </select>
+                <div class="fb-text" id="ifb-1"></div>
+            </div>
+
+            <!-- Item 2: Guarda-Roupa -->
+            <div class="inspect-card" id="icard-2">
+                <div class="inspect-header">🚪 Guarda-Roupa</div>
+                <div class="inspect-desc">"O Guarda-Roupa está localizado a <strong>Noroeste (NO)</strong> em relação ao centro do quarto."</div>
+                <select id="insp-2" data-correct="C" data-info="O Guarda-Roupa fica a Noroeste (NO).">
+                    <option value="">[ Selecione ]</option>
+                    <option value="C">C - Certo</option>
+                    <option value="E">E - Errado</option>
+                </select>
+                <div class="fb-text" id="ifb-2"></div>
+            </div>
+
+            <!-- Item 3: Janela -->
+            <div class="inspect-card" id="icard-3">
+                <div class="inspect-header">🪟 Janela</div>
+                <div class="inspect-desc">"A Janela está localizada ao <strong>Sul (S)</strong> do quarto."</div>
+                <select id="insp-3" data-correct="E" data-info="A Janela fica ao Norte (N), na parte superior do quarto.">
+                    <option value="">[ Selecione ]</option>
+                    <option value="C">C - Certo</option>
+                    <option value="E">E - Errado</option>
+                </select>
+                <div class="fb-text" id="ifb-3"></div>
+            </div>
+
+            <!-- Item 4: Mesa de Estudos -->
+            <div class="inspect-card" id="icard-4">
+                <div class="inspect-header">🪵 Mesa de Estudos</div>
+                <div class="inspect-desc">"A Mesa de Estudos está localizada a <strong>Sudeste (SE)</strong> do quarto."</div>
+                <select id="insp-4" data-correct="C" data-info="A Mesa de Estudos fica a Sudeste (SE).">
+                    <option value="">[ Selecione ]</option>
+                    <option value="C">C - Certo</option>
+                    <option value="E">E - Errado</option>
+                </select>
+                <div class="fb-text" id="ifb-4"></div>
+            </div>
+
+            <!-- Item 5: Porta de Entrada -->
+            <div class="inspect-card" id="icard-5">
+                <div class="inspect-header">🚪 Porta de Entrada</div>
+                <div class="inspect-desc">"A Porta de Entrada está localizada a <strong>Nordeste (NE)</strong> do quarto."</div>
+                <select id="insp-5" data-correct="E" data-info="A Porta de Entrada fica a Sudoeste (SO).">
+                    <option value="">[ Selecione ]</option>
+                    <option value="C">C - Certo</option>
+                    <option value="E">E - Errado</option>
+                </select>
+                <div class="fb-text" id="ifb-5"></div>
+            </div>
+
+            <!-- Item 6: Tapete -->
+            <div class="inspect-card" id="icard-6">
+                <div class="inspect-header">🧶 Tapete</div>
+                <div class="inspect-desc">"O Tapete está posicionado exatamente no <strong>Centro</strong> do quarto."</div>
+                <select id="insp-6" data-correct="C" data-info="O Tapete fica no Centro do quarto.">
+                    <option value="">[ Selecione ]</option>
+                    <option value="C">C - Certo</option>
+                    <option value="E">E - Errado</option>
+                </select>
+                <div class="fb-text" id="ifb-6"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn-check-all" onclick="checkAllGame2()">Verificar Todos os Desafios 🏆</button>
+    <div id="result-g2" class="result-box"></div>
+</div>
+
+<script>
+    function checkAllGame2() {
+        let score = 0;
+        let total = 4 + 6; // 4 solar questions + 6 floorplan items
+
+        // Check Solar (4 selects)
+        for (let i = 1; i <= 4; i++) {
+            const sel = document.getElementById(`bod-${i}`);
+            const card = document.getElementById(`bcard-${i}`);
+            const fb = document.getElementById(`bfb-${i}`);
+            const correct = sel.getAttribute('data-correct');
+
+            if (sel.value === correct) {
+                score++;
+                card.style.borderColor = '#27ae60';
+                card.style.backgroundColor = '#e8f8f5';
+                fb.style.display = 'none';
+            } else {
+                card.style.borderColor = '#e74c3c';
+                card.style.backgroundColor = '#fadbd8';
+                fb.textContent = `📍 Correto: ${sel.getAttribute('data-info')}`;
+                fb.style.color = '#c0392b';
+                fb.style.display = 'block';
+            }
+        }
+
+        // Check Floorplan Inspector (6 selects)
+        for (let i = 1; i <= 6; i++) {
+            const sel = document.getElementById(`insp-${i}`);
+            const card = document.getElementById(`icard-${i}`);
+            const fb = document.getElementById(`ifb-${i}`);
+            const correct = sel.getAttribute('data-correct');
+
+            if (sel.value === correct) {
+                score++;
+                card.style.borderColor = '#27ae60';
+                card.style.backgroundColor = '#e8f8f5';
+                fb.style.display = 'none';
+            } else {
+                card.style.borderColor = '#e74c3c';
+                card.style.backgroundColor = '#fadbd8';
+                fb.textContent = `📍 Explicação: ${sel.getAttribute('data-info')}`;
+                fb.style.color = '#c0392b';
+                fb.style.display = 'block';
+            }
+        }
+
+        const res = document.getElementById('result-g2');
+        if (score === total) {
+            res.textContent = "🎉 PARABÉNS! Você acertou todas as orientações solares e as posições na planta baixa!";
+            res.style.color = "#27ae60";
+        } else {
+            res.textContent = `❌ Você acertou ${score} de ${total} itens. Veja abaixo das caixas em vermelho a direção correta de cada item!`;
+            res.style.color = "#c0392b";
+        }
+    }
+</script>
+
+</body>
+</html>

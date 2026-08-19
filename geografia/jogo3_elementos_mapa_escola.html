@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 3: Elementos do Mapa & A Escola</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #fdfaf6; color: #333; padding: 20px; }
+        .container { max-width: 950px; margin: 0 auto; background: white; padding: 25px; border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); border-top: 6px solid #2980b9; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #d4e6f1; }
+        .btn-back { background: #2980b9; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #1b4f72; }
+        h1 { color: #2980b9; font-size: 1.8rem; }
+
+        .section-box { background: #fafafa; border: 2px solid #d4e6f1; border-radius: 10px; padding: 20px; margin-bottom: 25px; }
+        .section-title { font-size: 1.25rem; color: #1b4f72; margin-bottom: 15px; font-weight: bold; }
+        .instructions { background: #ebf5fb; padding: 12px; border-radius: 6px; margin-bottom: 15px; color: #1b4f72; font-weight: 500; }
+
+        /* ARRASTAR E SOLTAR OS ELEMENTOS DO MAPA */
+        .elements-pool { display: flex; flex-wrap: wrap; gap: 12px; padding: 15px; background: #eaf2f8; border: 2px dashed #85c1e9; border-radius: 10px; min-height: 90px; margin-bottom: 20px; justify-content: center; align-items: center; }
+        .drag-elem-badge { background: white; border: 2px solid #2980b9; border-radius: 8px; padding: 10px 16px; cursor: grab; font-weight: bold; color: #1b4f72; user-select: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1); font-size: 1rem; display: flex; align-items: center; gap: 6px; }
+        .drag-elem-badge:active { cursor: grabbing; opacity: 0.6; }
+
+        /* QUADRO DO MAPA CARTOGRÁFICO */
+        .map-board { background: #fdfefe; border: 3px solid #2980b9; border-radius: 12px; padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }
+        .map-slot { background: #f8fafc; border: 2px dashed #aed6f1; border-radius: 10px; min-height: 140px; padding: 12px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; transition: all 0.2s; }
+        .map-slot.drag-over { background: #ebf5fb; border-color: #2980b9; transform: scale(1.02); }
+        .slot-title { font-weight: bold; font-size: 0.95rem; color: #1b4f72; margin-bottom: 8px; text-align: center; border-bottom: 1px solid #d4e6f1; width: 100%; padding-bottom: 4px; }
+        .slot-content { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; }
+
+        /* Desafio 2: Funcionários da Educação */
+        .school-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
+        .school-card { background: white; border: 1px solid #d4e6f1; border-radius: 8px; padding: 15px; }
+        .school-card select { width: 100%; padding: 8px; margin-top: 8px; border-radius: 6px; border: 1px solid #ccc; font-weight: 500; }
+
+        .btn-check-all { background: #27ae60; color: white; border: none; padding: 14px 25px; font-size: 1.15rem; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 20px; transition: background 0.2s; }
+        .btn-check-all:hover { background: #219150; }
+        .result-box { margin-top: 15px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>🗺️ Jogo 3: Elementos do Mapa & A Escola</h1>
+        <a href="index_geografia.html" class="btn-back">⬅ Voltar ao Portal de Geografia</a>
+    </div>
+
+    <!-- DESAFIO 1: MONTANDO OS ELEMENTOS DO MAPA (ARRASTAR E SOLTAR) -->
+    <div class="section-box">
+        <div class="section-title">🧭 Desafio 1: Montando o Mapa Perfeito (Arrastar e Soltar)</div>
+        <div class="instructions">
+            Arraste cada um dos <strong>4 elementos cartográficos</strong> da caixa azul clara para o seu espaço correspondente dentro do quadro do mapa:
+        </div>
+
+        <div class="elements-pool" id="pool" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <div class="drag-elem-badge" draggable="true" ondragstart="drag(event)" id="el-titulo" data-slot="titulo">📑 TÍTULO ("Regiões do Brasil")</div>
+            <div class="drag-elem-badge" draggable="true" ondragstart="drag(event)" id="el-rosa" data-slot="rosa">🧭 ROSA DOS VENTOS (N, S, L, O)</div>
+            <div class="drag-elem-badge" draggable="true" ondragstart="drag(event)" id="el-escala" data-slot="escala">📏 ESCALA (0 - 50 - 100 - 150m)</div>
+            <div class="drag-elem-badge" draggable="true" ondragstart="drag(event)" id="el-legenda" data-slot="legenda">🏷️ LEGENDA (● Cidade, ◼ Capital, 🌳 Parque)</div>
+        </div>
+
+        <div class="map-board">
+            <!-- Slot 1: Título -->
+            <div class="map-slot" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-slot-type="titulo">
+                <div class="slot-title">1. Assunto e Local</div>
+                <div class="slot-content">
+                    <span style="font-size:0.8rem; color:#7f8c8d; text-align:center;">Solte aqui o elemento que dá nome e indica o tema do mapa.</span>
+                </div>
+            </div>
+
+            <!-- Slot 2: Rosa dos Ventos -->
+            <div class="map-slot" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-slot-type="rosa">
+                <div class="slot-title">2. Orientação Espacial</div>
+                <div class="slot-content">
+                    <span style="font-size:0.8rem; color:#7f8c8d; text-align:center;">Solte aqui o elemento que mostra os pontos cardeais.</span>
+                </div>
+            </div>
+
+            <!-- Slot 3: Escala -->
+            <div class="map-slot" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-slot-type="escala">
+                <div class="slot-title">3. Proporção de Medida</div>
+                <div class="slot-content">
+                    <span style="font-size:0.8rem; color:#7f8c8d; text-align:center;">Solte aqui a linha graduada que indica a redução do tamanho real.</span>
+                </div>
+            </div>
+
+            <!-- Slot 4: Legenda -->
+            <div class="map-slot" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-slot-type="legenda">
+                <div class="slot-title">4. Símbolos e Cores</div>
+                <div class="slot-content">
+                    <span style="font-size:0.8rem; color:#7f8c8d; text-align:center;">Solte aqui o elemento que explica os pontos, linhas e cores.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DESAFIO 2: FUNCIONÁRIOS DA EDUCAÇÃO -->
+    <div class="section-box">
+        <div class="section-title">🏫 Desafio 2: 07 de Agosto - Dia dos Funcionários da Educação</div>
+        <div class="instructions">
+            Responda às questões sobre os profissionais e a importância de cada um para a escola:
+        </div>
+
+        <div class="school-grid">
+            <div class="school-card" id="scard-1">
+                <strong>1. Quem são os funcionários e profissionais que fazem parte do dia a dia da escola?</strong>
+                <select id="sch-1" data-correct="todos">
+                    <option value="">[ Escolha a resposta ]</option>
+                    <option value="apenas_prof">Apenas os professores</option>
+                    <option value="todos">Professores, equipe de limpeza, merendeira, portaria, secretaria, direção e biblioteca</option>
+                    <option value="nenhum">Apenas os motoristas de outras cidades</option>
+                </select>
+            </div>
+
+            <div class="school-card" id="scard-2">
+                <strong>2. Por que a escola depende do trabalho de todos esses profissionais para funcionar bem?</strong>
+                <select id="sch-2" data-correct="uniao">
+                    <option value="">[ Escolha a resposta ]</option>
+                    <option value="uniao">Porque cada funcionário tem uma função importante e essencial para o aprendizado e bem-estar</option>
+                    <option value="sozinho">Porque uma pessoa só conseguiria fazer tudo sozinha</option>
+                    <option value="festa">Apenas para organizar festas nos finais de semana</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn-check-all" onclick="checkAllGame3()">Verificar Todas as Respostas 🏆</button>
+    <div id="result-g3" class="result-box"></div>
+</div>
+
+<script>
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+    function dragEnter(ev) { 
+        var slot = ev.target.closest('.map-slot');
+        if(slot) slot.classList.add('drag-over'); 
+    }
+    function dragLeave(ev) { 
+        var slot = ev.target.closest('.map-slot');
+        if(slot) slot.classList.remove('drag-over'); 
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var draggedBadge = document.getElementById(data);
+        if(!draggedBadge) return;
+
+        var targetSlot = ev.target.closest('.map-slot');
+        var pool = ev.target.closest('.elements-pool');
+
+        if (targetSlot) {
+            var content = targetSlot.querySelector('.slot-content');
+            content.innerHTML = "";
+            content.appendChild(draggedBadge);
+            targetSlot.classList.remove('drag-over');
+        } else if (pool) {
+            pool.appendChild(draggedBadge);
+        }
+    }
+
+    function checkAllGame3() {
+        let score = 0;
+        let totalPlaced = 0;
+        const total = 4 + 2; // 4 drag + 2 questions
+
+        // Check Drag and Drop
+        document.querySelectorAll('.map-slot').forEach(slot => {
+            const slotType = slot.getAttribute('data-slot-type');
+            const badge = slot.querySelector('.drag-elem-badge');
+
+            if (badge) {
+                totalPlaced++;
+                if (badge.getAttribute('data-slot') === slotType) {
+                    score++;
+                    slot.style.borderColor = '#27ae60';
+                    slot.style.backgroundColor = '#e8f8f5';
+                } else {
+                    slot.style.borderColor = '#e74c3c';
+                    slot.style.backgroundColor = '#fadbd8';
+                }
+            } else {
+                slot.style.borderColor = '#aed6f1';
+                slot.style.backgroundColor = '#f8fafc';
+            }
+        });
+
+        // Check Questions
+        for (let i = 1; i <= 2; i++) {
+            const sel = document.getElementById(`sch-${i}`);
+            const card = document.getElementById(`scard-${i}`);
+            if (sel.value === sel.getAttribute('data-correct')) {
+                score++;
+                card.style.borderColor = '#27ae60';
+                card.style.backgroundColor = '#e8f8f5';
+            } else {
+                card.style.borderColor = '#e74c3c';
+                card.style.backgroundColor = '#fadbd8';
+            }
+        }
+
+        const res = document.getElementById('result-g3');
+        if (totalPlaced < 4) {
+            res.textContent = "⚠️ Arraste todos os 4 elementos do mapa para seus quadros antes de verificar!";
+            res.style.color = "#d35400";
+        } else if (score === total) {
+            res.textContent = "🎉 EXCELENTE! Você montou todos os elementos do mapa e valorizou a comunidade escolar!";
+            res.style.color = "#27ae60";
+        } else {
+            res.textContent = `❌ Você acertou ${score} de ${total} pontos. Corrija os itens em vermelho e tente novamente!`;
+            res.style.color = "#c0392b";
+        }
+    }
+</script>
+
+</body>
+</html>

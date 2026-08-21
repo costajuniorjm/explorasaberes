@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 1: Material Dourado & Decomposição</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #fdfbf7; color: #333; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 25px; border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); border-top: 6px solid #e67e22; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #fce4d6; }
+        .btn-back { background: #e67e22; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #b94a00; }
+        h1 { color: #d35400; font-size: 1.8rem; }
+
+        .progress-bar-container { background: #eaeded; height: 16px; border-radius: 8px; margin-bottom: 20px; overflow: hidden; position: relative; }
+        .progress-bar-fill { background: linear-gradient(90deg, #f39c12, #27ae60); height: 100%; width: 10%; transition: width 0.4s ease; }
+        .progress-text { position: absolute; width: 100%; top: 0; left: 0; font-size: 0.75rem; font-weight: bold; text-align: center; line-height: 16px; color: #2c3e50; }
+
+        .section-box { background: #fafafa; border: 2px solid #fce4d6; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .section-title { font-size: 1.25rem; color: #b94a00; margin-bottom: 12px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+
+        /* ÁREA DE EXIBIÇÃO DO MATERIAL DOURADO */
+        .gold-display-area { background: #ffffff; border: 2px solid #f5b041; border-radius: 12px; padding: 25px 15px; min-height: 250px; display: flex; flex-wrap: wrap; gap: 25px; align-items: flex-end; justify-content: center; margin-bottom: 20px; box-shadow: inset 0 2px 8px rgba(243,156,18,0.08); }
+        .gold-group { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; justify-content: center; }
+
+        /* PERGUNTA A: QUAL É O NÚMERO */
+        .question-card { background: white; border: 2px solid #eaeded; border-radius: 10px; padding: 16px; margin-bottom: 18px; display: flex; flex-direction: column; gap: 10px; }
+        .question-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 1.15rem; font-weight: bold; color: #2c3e50; }
+        .input-number { width: 170px; padding: 8px 12px; font-size: 1.25rem; font-weight: bold; border-radius: 6px; border: 2px solid #e67e22; color: #d35400; text-align: center; background: #fffdf9; }
+
+        /* PERGUNTA B: PINTE A DECOMPOSIÇÃO */
+        .decomp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 10px; }
+        .decomp-btn { background: #fefefe; border: 2px solid #d5dbdb; border-radius: 10px; padding: 15px 12px; font-size: 1.1rem; font-weight: bold; color: #34495e; cursor: pointer; transition: all 0.2s; text-align: center; user-select: none; }
+        .decomp-btn:hover { border-color: #f39c12; background: #fdfaf6; transform: translateY(-2px); }
+        .decomp-btn.selected { background: #fdebd0 !important; border-color: #d35400 !important; color: #935116 !important; box-shadow: 0 4px 8px rgba(243,156,18,0.25); }
+
+        .btn-confirm { background: #27ae60; color: white; border: none; padding: 14px 28px; font-size: 1.15rem; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: background 0.2s; margin-top: 15px; }
+        .btn-confirm:hover { background: #219150; }
+
+        .feedback-box { margin-top: 15px; padding: 14px; border-radius: 8px; font-weight: bold; text-align: center; font-size: 1.1rem; display: none; line-height: 1.5; }
+        .feedback-box.success { background: #e8f8f5; color: #27ae60; border: 2px solid #2ecc71; }
+        .feedback-box.error { background: #fadbd8; color: #c0392b; border: 2px solid #e74c3c; }
+
+        /* Final do Jogo */
+        .end-game-card { text-align: center; padding: 30px; display: none; }
+        .trophy-icon { font-size: 4rem; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>🔢 Jogo 1: Material Dourado & Decomposição</h1>
+        <a href="index_matematica.html" class="btn-back">⬅ Voltar ao Portal de Matemática</a>
+    </div>
+
+    <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="prog-fill"></div>
+        <div class="progress-text" id="prog-text">Questão 1 de 10</div>
+    </div>
+
+    <div id="game-active-area">
+        <div class="section-box">
+            <div class="section-title">
+                <span>🧩 6. Observe o número representado pelo material dourado:</span>
+                <span style="font-size:0.95rem; color:#7f8c8d;" id="round-indicator">Rodada 1/10</span>
+            </div>
+
+            <!-- Material Dourado Fiel à Imagem da Apostila -->
+            <div class="gold-display-area" id="gold-area"></div>
+
+            <!-- Pergunta a -->
+            <div class="question-card">
+                <div class="question-row">
+                    <span>a) Qual é o número?</span>
+                    <input type="text" id="ans-number" class="input-number" placeholder="" autocomplete="off">
+                </div>
+            </div>
+
+            <!-- Pergunta b -->
+            <div class="question-card">
+                <div class="question-row" style="font-size: 1.05rem;">
+                    <span>b) Pinte (clique) na decomposição que representa esse número:</span>
+                </div>
+                <div class="decomp-grid" id="decomp-container"></div>
+            </div>
+
+            <button class="btn-confirm" id="btn-action" onclick="checkCurrentRound()">Confirmar Resposta 🏆</button>
+            <div class="feedback-box" id="feedback-msg"></div>
+        </div>
+    </div>
+
+    <div class="end-game-card" id="end-game-area">
+        <div class="trophy-icon">🏆</div>
+        <h2 style="color:#27ae60; margin-bottom:10px;">Parabéns! Você completou todas as 10 rodadas!</h2>
+        <p style="font-size:1.2rem; color:#2c3e50; margin-bottom:20px;" id="final-score-text"></p>
+        <button class="btn-confirm" onclick="restartGame()" style="max-width:300px; margin:0 auto;">Jogar Novamente 🔄</button>
+    </div>
+</div>
+
+<script>
+    // --- GERADORES DE MATERIAL DOURADO ISOMÉTRICO EXATO ---
+
+    // 1. CUBO DE MILHAR (1.000)
+    function getCube1000SVG() {
+        let svg = `<svg viewBox="0 0 200 200" width="160" height="160" style="filter: drop-shadow(0 6px 8px rgba(0,0,0,0.18));">`;
+        
+        // Top Face (10x10 Grid)
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                const x0 = 100 + (j - i) * 8;
+                const y0 = 15 + (i + j) * 4.5;
+                const x1 = 100 + (j + 1 - i) * 8;
+                const y1 = 15 + (i + j + 1) * 4.5;
+                const x2 = 100 + (j + 1 - (i + 1)) * 8;
+                const y2 = 15 + (i + 1 + j + 1) * 4.5;
+                const x3 = 100 + (j - (i + 1)) * 8;
+                const y3 = 15 + (i + 1 + j) * 4.5;
+                svg += `<polygon points="${x0},${y0} ${x1},${y1} ${x2},${y2} ${x3},${y3}" fill="#f5c767" stroke="#935116" stroke-width="0.85"/>`;
+            }
+        }
+
+        // Left Face (10x10 Grid)
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                const x0 = 20 + j * 8;
+                const y0 = 60 + j * 4.5 + i * 8;
+                const x1 = 20 + (j + 1) * 8;
+                const y1 = 60 + (j + 1) * 4.5 + i * 8;
+                const x2 = 20 + (j + 1) * 8;
+                const y2 = 60 + (j + 1) * 4.5 + (i + 1) * 8;
+                const x3 = 20 + j * 8;
+                const y3 = 60 + j * 4.5 + (i + 1) * 8;
+                svg += `<polygon points="${x0},${y0} ${x1},${y1} ${x2},${y2} ${x3},${y3}" fill="#e59866" stroke="#935116" stroke-width="0.85"/>`;
+            }
+        }
+
+        // Right Face (10x10 Grid)
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                const x0 = 100 + j * 8;
+                const y0 = 105 - j * 4.5 + i * 8;
+                const x1 = 100 + (j + 1) * 8;
+                const y1 = 105 - (j + 1) * 4.5 + i * 8;
+                const x2 = 100 + (j + 1) * 8;
+                const y2 = 105 - (j + 1) * 4.5 + (i + 1) * 8;
+                const x3 = 100 + j * 8;
+                const y3 = 105 - j * 4.5 + (i + 1) * 8;
+                svg += `<polygon points="${x0},${y0} ${x1},${y1} ${x2},${y2} ${x3},${y3}" fill="#d38235" stroke="#935116" stroke-width="0.85"/>`;
+            }
+        }
+
+        svg += `</svg>`;
+        return svg;
+    }
+
+    // 2. PLACA DE CENTENA (100)
+    function getPlaca100SVG() {
+        let svg = `<svg viewBox="0 0 120 180" width="105" height="155" style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));">`;
+        
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                const x0 = 15 + j * 7.5;
+                const y0 = 25 + j * 4.2 + i * 8;
+                const x1 = 15 + (j + 1) * 7.5;
+                const y1 = 25 + (j + 1) * 4.2 + i * 8;
+                const x2 = 15 + (j + 1) * 7.5;
+                const y2 = 25 + (j + 1) * 4.2 + (i + 1) * 8;
+                const x3 = 15 + j * 7.5;
+                const y3 = 25 + j * 4.2 + (i + 1) * 8;
+                svg += `<polygon points="${x0},${y0} ${x1},${y1} ${x2},${y2} ${x3},${y3}" fill="#e59866" stroke="#935116" stroke-width="0.8"/>`;
+            }
+        }
+
+        for (let j = 0; j < 10; j++) {
+            const x0 = 15 + j * 7.5;
+            const y0 = 25 + j * 4.2;
+            const x1 = 15 + (j + 1) * 7.5;
+            const y1 = 25 + (j + 1) * 4.2;
+            const x2 = 25 + (j + 1) * 7.5;
+            const y2 = 18 + (j + 1) * 4.2;
+            const x3 = 25 + j * 7.5;
+            const y3 = 18 + j * 4.2;
+            svg += `<polygon points="${x0},${y0} ${x1},${y1} ${x2},${y2} ${x3},${y3}" fill="#f5c767" stroke="#935116" stroke-width="0.8"/>`;
+        }
+
+        for (let i = 0; i < 10; i++) {
+            const x0 = 90;
+            const y0 = 67 + i * 8;
+            const x1 = 100;
+            const y1 = 60 + i * 8;
+            const x2 = 100;
+            const y2 = 60 + (i + 1) * 8;
+            const x3 = 90;
+            const y3 = 67 + (i + 1) * 8;
+            svg += `<polygon points="${x0},${y0} ${x1},${y1} ${x2},${y2} ${x3},${y3}" fill="#d38235" stroke="#935116" stroke-width="0.8"/>`;
+        }
+
+        svg += `</svg>`;
+        return svg;
+    }
+
+    // 3. BARRA DE DEZENA (10)
+    function getBarra10SVG() {
+        let svg = `<svg viewBox="0 0 45 180" width="36" height="150" style="filter: drop-shadow(0 3px 5px rgba(0,0,0,0.12));">`;
+        svg += `<polygon points="18,12 32,20 18,28 4,20" fill="#f5c767" stroke="#935116" stroke-width="1"/>`;
+
+        for (let i = 0; i < 10; i++) {
+            const yOffset = 20 + i * 12;
+            svg += `<polygon points="4,${yOffset} 18,${yOffset + 8} 18,${yOffset + 20} 4,${yOffset + 12}" fill="#e59866" stroke="#935116" stroke-width="0.9"/>`;
+            svg += `<polygon points="18,${yOffset + 8} 32,${yOffset} 32,${yOffset + 12} 18,${yOffset + 20}" fill="#d38235" stroke="#935116" stroke-width="0.9"/>`;
+        }
+
+        svg += `</svg>`;
+        return svg;
+    }
+
+    // 4. CUBINHO DE UNIDADE (1)
+    function getCubinho1SVG() {
+        return `
+        <svg viewBox="0 0 35 40" width="26" height="30" style="filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15)); margin: 2px;">
+            <polygon points="16,4 28,11 16,18 4,11" fill="#f5c767" stroke="#935116" stroke-width="1"/>
+            <polygon points="4,11 16,18 16,30 4,23" fill="#e59866" stroke="#935116" stroke-width="1"/>
+            <polygon points="16,18 28,11 28,23 16,30" fill="#d38235" stroke="#935116" stroke-width="1"/>
+        </svg>`;
+    }
+
+    // --- GERADOR DE 10 RODADAS ALEATÓRIAS ---
+    let rounds = [];
+    let currentRoundIdx = 0;
+    let totalScore = 0;
+    let selectedDecompIdx = null;
+    let isWaitingNext = false;
+
+    function generate10Rounds() {
+        rounds = [];
+        for (let i = 0; i < 10; i++) {
+            const m = Math.floor(Math.random() * 2) + 1; // 1 ou 2
+            let c = Math.floor(Math.random() * 4);       // 0 a 3
+            let d = Math.floor(Math.random() * 5);       // 0 a 4
+            let u = Math.floor(Math.random() * 5);       // 0 a 4
+
+            if (c === 0 && d === 0 && u === 0) {
+                c = 1;
+                d = 2;
+            }
+
+            const total = (m * 1000) + (c * 100) + (d * 10) + u;
+
+            // Decomposição Correta Canônica (ex: 1000 + 100 + 20)
+            const parts = [];
+            if (m > 0) parts.push(`${m * 1000}`);
+            if (c > 0) parts.push(`${c * 100}`);
+            if (d > 0) parts.push(`${d * 10}`);
+            if (u > 0) parts.push(`${u}`);
+            const correctText = parts.join(" + ");
+
+            // 3 Distratores Incorretos
+            const fake1 = `${m * 1000} + ${(c + 1) * 100} + ${(d * 10 || 10)}`;
+            const fake2 = `${m * 1000} + ${(c * 100 || 100)} + ${(d + 1) * 10 + 5}`;
+            const fake3 = `${(m + 1) * 1000} + ${(c * 100 || 200)} + ${(d * 10 || 20)}`;
+
+            const options = [
+                { text: correctText, isCorrect: true },
+                { text: fake1, isCorrect: false },
+                { text: fake2, isCorrect: false },
+                { text: fake3, isCorrect: false }
+            ];
+
+            options.sort(() => 0.5 - Math.random());
+
+            rounds.push({
+                m, c, d, u,
+                total,
+                options
+            });
+        }
+    }
+
+    function loadRound(idx) {
+        isWaitingNext = false;
+        selectedDecompIdx = null;
+
+        const r = rounds[idx];
+        document.getElementById('round-indicator').textContent = `Rodada ${idx + 1}/10`;
+        document.getElementById('prog-text').textContent = `Questão ${idx + 1} de 10`;
+        document.getElementById('prog-fill').style.width = `${((idx + 1) / 10) * 100}%`;
+
+        document.getElementById('ans-number').value = "";
+        document.getElementById('ans-number').disabled = false;
+        document.getElementById('btn-action').textContent = "Confirmar Resposta 🏆";
+        document.getElementById('feedback-msg').style.display = 'none';
+
+        // Renderizar Material Dourado
+        const goldArea = document.getElementById('gold-area');
+        let goldHTML = "";
+
+        if (r.m > 0) {
+            goldHTML += `<div class="gold-group">`;
+            for (let i = 0; i < r.m; i++) goldHTML += getCube1000SVG();
+            goldHTML += `</div>`;
+        }
+
+        if (r.c > 0) {
+            goldHTML += `<div class="gold-group">`;
+            for (let i = 0; i < r.c; i++) goldHTML += getPlaca100SVG();
+            goldHTML += `</div>`;
+        }
+
+        if (r.d > 0) {
+            goldHTML += `<div class="gold-group">`;
+            for (let i = 0; i < r.d; i++) goldHTML += getBarra10SVG();
+            goldHTML += `</div>`;
+        }
+
+        if (r.u > 0) {
+            goldHTML += `<div class="gold-group" style="max-width:130px;">`;
+            for (let i = 0; i < r.u; i++) goldHTML += getCubinho1SVG();
+            goldHTML += `</div>`;
+        }
+
+        goldArea.innerHTML = goldHTML;
+
+        // Renderizar Decomposições
+        const decompContainer = document.getElementById('decomp-container');
+        decompContainer.innerHTML = "";
+        r.options.forEach((opt, oIdx) => {
+            const btn = document.createElement('div');
+            btn.className = 'decomp-btn';
+            btn.id = `dbtn-${oIdx}`;
+            btn.textContent = opt.text;
+            btn.onclick = () => selectSingleDecomp(oIdx);
+            decompContainer.appendChild(btn);
+        });
+    }
+
+    function selectSingleDecomp(oIdx) {
+        if (isWaitingNext) return;
+
+        selectedDecompIdx = oIdx;
+        document.querySelectorAll('.decomp-btn').forEach((b, idx) => {
+            if (idx === oIdx) {
+                b.classList.add('selected');
+            } else {
+                b.classList.remove('selected');
+            }
+        });
+    }
+
+    function checkCurrentRound() {
+        if (isWaitingNext) {
+            currentRoundIdx++;
+            if (currentRoundIdx < 10) {
+                loadRound(currentRoundIdx);
+            } else {
+                showEndGame();
+            }
+            return;
+        }
+
+        const rawVal = document.getElementById('ans-number').value.trim();
+        const cleanVal = rawVal.replace(/[\.\s,]/g, '');
+        const userNumber = parseInt(cleanVal, 10);
+        const r = rounds[currentRoundIdx];
+        const fb = document.getElementById('feedback-msg');
+
+        if (isNaN(userNumber)) {
+            alert("Por favor, digite o número representado pelo material dourado na letra (a)!");
+            return;
+        }
+
+        if (selectedDecompIdx === null) {
+            alert("Por favor, clique para selecionar a decomposição correta na letra (b)!");
+            return;
+        }
+
+        // Validação Numérica e de Decomposição
+        const numberCorrect = (userNumber === r.total);
+        const decompCorrect = r.options[selectedDecompIdx].isCorrect;
+
+        isWaitingNext = true;
+        document.getElementById('ans-number').disabled = true;
+
+        if (numberCorrect && decompCorrect) {
+            totalScore++;
+            fb.className = 'feedback-box success';
+            fb.innerHTML = `✨ PARABÉNS! Você acertou! O número é <strong>${r.total.toLocaleString('pt-BR')}</strong> e a decomposição está perfeita!`;
+            fb.style.display = 'block';
+        } else {
+            fb.className = 'feedback-box error';
+            let msg = `❌ Resposta incorreta:<br>`;
+            if (!numberCorrect) {
+                msg += `• O número correto é <strong>${r.total.toLocaleString('pt-BR')}</strong>.<br>`;
+            }
+            if (!decompCorrect) {
+                const correta = r.options.find(o => o.isCorrect).text;
+                msg += `• A decomposição correta é: <strong>${correta}</strong>`;
+            }
+            fb.innerHTML = msg;
+            fb.style.display = 'block';
+        }
+
+        document.getElementById('btn-action').textContent = "Próxima Questão ➔";
+    }
+
+    function showEndGame() {
+        document.getElementById('game-active-area').style.display = 'none';
+        const endArea = document.getElementById('end-game-area');
+        endArea.style.display = 'block';
+        document.getElementById('final-score-text').innerHTML = `Você acertou <strong>${totalScore}</strong> de <strong>10</strong> desafios de Material Dourado!`;
+    }
+
+    function restartGame() {
+        currentRoundIdx = 0;
+        totalScore = 0;
+        document.getElementById('end-game-area').style.display = 'none';
+        document.getElementById('game-active-area').style.display = 'block';
+        generate10Rounds();
+        loadRound(0);
+    }
+
+    // Inicialização
+    generate10Rounds();
+    loadRound(0);
+</script>
+
+</body>
+</html>

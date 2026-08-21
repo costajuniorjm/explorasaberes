@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 2: Sólidos Geométricos no Cotidiano</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #fdfbf7; color: #333; padding: 20px; }
+        .container { max-width: 1050px; margin: 0 auto; background: white; padding: 25px; border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); border-top: 6px solid #2980b9; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #d4e6f1; }
+        .btn-back { background: #2980b9; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #1b4f72; }
+        h1 { color: #2980b9; font-size: 1.8rem; }
+
+        .instructions { background: #ebf5fb; padding: 14px; border-radius: 8px; margin-bottom: 20px; color: #1b4f72; font-weight: 500; font-size: 1rem; line-height: 1.5; }
+
+        /* ÁREA DE OBJETOS PARA ARRASTAR (POOL) */
+        .items-pool-card { background: #f8fafc; border: 2px dashed #85c1e9; border-radius: 12px; padding: 15px; margin-bottom: 25px; }
+        .pool-title { font-weight: bold; font-size: 1.05rem; color: #2c3e50; margin-bottom: 12px; text-align: center; }
+        .objects-pool { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; min-height: 90px; align-items: center; }
+
+        .drag-card { background: white; border: 2px solid #3498db; border-radius: 10px; padding: 10px 14px; font-size: 1rem; font-weight: bold; color: #2c3e50; cursor: grab; user-select: none; box-shadow: 0 3px 6px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; transition: transform 0.15s, box-shadow 0.15s; }
+        .drag-card:active { cursor: grabbing; opacity: 0.6; }
+        .drag-card:hover { transform: translateY(-2px); box-shadow: 0 5px 12px rgba(52,152,219,0.25); }
+        .item-emoji { font-size: 1.5rem; }
+
+        /* GRID DE CAIXAS DOS SÓLIDOS GEOMÉTRICOS */
+        .solids-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-bottom: 25px; }
+        .solid-box { border-radius: 12px; padding: 15px; display: flex; flex-direction: column; min-height: 250px; background: #ffffff; border: 3px solid #bdc3c7; transition: border-color 0.2s, background 0.2s; }
+        .solid-box.drag-over { background: #f4f6f7; border-color: #f39c12; transform: scale(1.02); }
+
+        /* Cores Temáticas de Borda Baseadas na Imagem */
+        .box-cubo { border-color: #2980b9; }
+        .box-paralelepipedo { border-color: #27ae60; }
+        .box-esfera { border-color: #8e44ad; }
+        .box-cilindro { border-color: #e67e22; }
+        .box-cone { border-color: #2980b9; }
+        .box-piramide { border-color: #c0392b; }
+
+        .solid-header { text-align: center; font-size: 1.25rem; font-weight: bold; margin-bottom: 8px; letter-spacing: 1px; }
+        .header-cubo { color: #2980b9; }
+        .header-paralelepipedo { color: #27ae60; }
+        .header-esfera { color: #8e44ad; }
+        .header-cilindro { color: #e67e22; }
+        .header-cone { color: #2980b9; }
+        .header-piramide { color: #c0392b; }
+
+        .solid-figure-preview { text-align: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px dashed #eaeded; }
+
+        .drop-slot-content { display: flex; flex-direction: column; gap: 8px; flex-grow: 1; min-height: 100px; justify-content: flex-start; }
+        .empty-slot-hint { font-size: 0.85rem; color: #95a5a6; text-align: center; margin-top: 25px; }
+
+        .btn-check-all { background: #27ae60; color: white; border: none; padding: 14px 28px; font-size: 1.15rem; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: background 0.2s; }
+        .btn-check-all:hover { background: #219150; }
+        .result-box { margin-top: 18px; text-align: center; font-size: 1.2rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>📐 Jogo 2: Sólidos Geométricos no Cotidiano</h1>
+        <a href="index_matematica.html" class="btn-back">⬅ Voltar ao Portal de Matemática</a>
+    </div>
+
+    <div class="instructions">
+        Observe os <strong>6 sólidos geométricos</strong> abaixo. Arraste cada objeto do cotidiano para a caixa da forma geométrica que ele possui! <em>(2 objetos por sólido geométrico)</em>
+    </div>
+
+    <!-- POOL DE OBJETOS DO COTIDIANO -->
+    <div class="items-pool-card">
+        <div class="pool-title">📦 Objetos do Cotidiano (Arraste para as caixas corretas):</div>
+        <div class="objects-pool" id="pool" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <!-- Cubo -->
+            <div class="drag-card" draggable="true" ondragstart="drag(event)" id="obj-dado" data-solid="cubo">
+                <span class="item-emoji">🎲</span> Dado
+            </div>
+            <div class="drag-card" draggable="true" ondragstart="drag(event)" id="obj-cubo-magico" data-solid="cubo">
+                <span class="item-emoji">🧩</span> Cubo Mágico
+            </div>
+
+            <!-- Paralelepípedo -->
+            <div class="drag-card" draggable="true" ondragstart="drag(event)" id="obj-caixa" data-solid="paralelepipedo">
+                <span class="item-emoji">📦</span> Caixa de Papelão
+            </div>
+            <div class="drag-card" draggable="true" ondragstart="drag(event)" id="obj-tijolo" data-solid="paralelepipedo">
+                <span class="item-emoji">🧱</span> Tijolo
+            </div>
+
+            <!-- Esfera -->
+            <div class="drag-card" draggable="true" ondragstart="drag(event)" id="obj-bola" data-solid="esfera">
+                <span class="item-emoji">⚽</span> Bola de Futebol
+            </div>
+            <div class="drag-card" draggable="true" ondragstart="drag(event)" id="obj-laranja" data-solid="esfera">
+                <span class="item-emoji">🍊</span> Laranja
+            </div>
+
+            <!-- Cilindro -->
+            <div class="drag-card" draggable="true" ondragstart="drag(event)" id="obj-lata" data-solid="cilindro">
+                <span class="item-emoji">🥤</span> Latinha de Refrigerante
+            </div>
+            <div class="drag-card" draggable="true" ondragstart="drag(event)" id="obj-papel" data-solid="cilindro">
+                <span class="item-emoji">🧻</span> Rolo de Papel
+            </div>
+
+            <!-- Cone -->
+            <div class="drag-card" draggable="true" ondragstart="drag(event)" id="obj-sorvete" data-solid="cone">
+                <span class="item-emoji">🍦</span> Casquinha de Sorvete
+            </div>
+            <div class="drag-card" draggable="true" ondragstart="drag(event)" id="obj-chapeu" data-solid="cone">
+                <span class="item-emoji">🎉</span> Chapéu de Festa
+            </div>
+
+            <!-- Pirâmide -->
+            <div class="drag-card" draggable="true" ondragstart="drag(event)" id="obj-egito" data-solid="piramide">
+                <span class="item-emoji">🏛️</span> Pirâmide do Egito
+            </div>
+            <div class="drag-card" draggable="true" ondragstart="drag(event)" id="obj-barraca" data-solid="piramide">
+                <span class="item-emoji">⛺</span> Barraca de Acampamento
+            </div>
+        </div>
+    </div>
+
+    <!-- CAIXAS DOS 6 SÓLIDOS GEOMÉTRICOS -->
+    <div class="solids-grid">
+        <!-- 1. CUBO -->
+        <div class="solid-box box-cubo" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-solid-type="cubo" id="box-cubo">
+            <div class="solid-header header-cubo">CUBO</div>
+            <div class="solid-figure-preview">
+                <svg viewBox="0 0 100 85" width="80" height="70">
+                    <polygon points="50,5 90,25 50,45 10,25" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+                    <polygon points="10,25 50,45 50,80 10,60" fill="#2980b9" stroke="#1f618d" stroke-width="2"/>
+                    <polygon points="50,45 90,25 90,60 50,80" fill="#1f618d" stroke="#154360" stroke-width="2"/>
+                </svg>
+            </div>
+            <div class="drop-slot-content">
+                <span class="empty-slot-hint">Solte os 2 objetos com forma de cubo aqui</span>
+            </div>
+        </div>
+
+        <!-- 2. PARALELEPÍPEDO -->
+        <div class="solid-box box-paralelepipedo" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-solid-type="paralelepipedo" id="box-paralelepipedo">
+            <div class="solid-header header-paralelepipedo">PARALELEPÍPEDO</div>
+            <div class="solid-figure-preview">
+                <svg viewBox="0 0 120 75" width="95" height="65">
+                    <polygon points="20,15 105,15 85,35 5,35" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
+                    <polygon points="5,35 85,35 85,68 5,68" fill="#27ae60" stroke="#1e8449" stroke-width="2"/>
+                    <polygon points="85,35 105,15 105,48 85,68" fill="#1e8449" stroke="#145a32" stroke-width="2"/>
+                </svg>
+            </div>
+            <div class="drop-slot-content">
+                <span class="empty-slot-hint">Solte os 2 objetos em forma de paralelepípedo aqui</span>
+            </div>
+        </div>
+
+        <!-- 3. ESFERA -->
+        <div class="solid-box box-esfera" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-solid-type="esfera" id="box-esfera">
+            <div class="solid-header header-esfera">ESFERA</div>
+            <div class="solid-figure-preview">
+                <svg viewBox="0 0 90 85" width="75" height="70">
+                    <defs>
+                        <radialGradient id="sphereGrad" cx="35%" cy="35%" r="65%">
+                            <stop offset="0%" stop-color="#bb8fce"/>
+                            <stop offset="50%" stop-color="#8e44ad"/>
+                            <stop offset="100%" stop-color="#4a235a"/>
+                        </radialGradient>
+                    </defs>
+                    <circle cx="45" cy="42" r="35" fill="url(#sphereGrad)" stroke="#5b2c6f" stroke-width="2"/>
+                </svg>
+            </div>
+            <div class="drop-slot-content">
+                <span class="empty-slot-hint">Solte os 2 objetos em forma de esfera aqui</span>
+            </div>
+        </div>
+
+        <!-- 4. CILINDRO -->
+        <div class="solid-box box-cilindro" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-solid-type="cilindro" id="box-cilindro">
+            <div class="solid-header header-cilindro">CILINDRO</div>
+            <div class="solid-figure-preview">
+                <svg viewBox="0 0 90 85" width="75" height="70">
+                    <!-- Body -->
+                    <rect x="20" y="20" width="50" height="45" fill="#e67e22" stroke="#d35400" stroke-width="2"/>
+                    <!-- Bottom Oval -->
+                    <ellipse cx="45" cy="65" rx="25" ry="10" fill="#d35400" stroke="#ba4a00" stroke-width="2"/>
+                    <!-- Top Oval -->
+                    <ellipse cx="45" cy="20" rx="25" ry="10" fill="#f39c12" stroke="#d35400" stroke-width="2"/>
+                </svg>
+            </div>
+            <div class="drop-slot-content">
+                <span class="empty-slot-hint">Solte os 2 objetos em forma de cilindro aqui</span>
+            </div>
+        </div>
+
+        <!-- 5. CONE -->
+        <div class="solid-box box-cone" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-solid-type="cone" id="box-cone">
+            <div class="solid-header header-cone">CONE</div>
+            <div class="solid-figure-preview">
+                <svg viewBox="0 0 90 85" width="75" height="70">
+                    <!-- Base Oval -->
+                    <ellipse cx="45" cy="68" rx="28" ry="10" fill="#1f618d" stroke="#154360" stroke-width="2"/>
+                    <!-- Cone Triangle -->
+                    <polygon points="45,8 17,68 73,68" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+                </svg>
+            </div>
+            <div class="drop-slot-content">
+                <span class="empty-slot-hint">Solte os 2 objetos em forma de cone aqui</span>
+            </div>
+        </div>
+
+        <!-- 6. PIRÂMIDE -->
+        <div class="solid-box box-piramide" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-solid-type="piramide" id="box-piramide">
+            <div class="solid-header header-piramide">PIRÂMIDE</div>
+            <div class="solid-figure-preview">
+                <svg viewBox="0 0 90 85" width="75" height="70">
+                    <polygon points="45,8 12,68 62,75" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+                    <polygon points="45,8 62,75 82,58" fill="#922b21" stroke="#641e16" stroke-width="2"/>
+                </svg>
+            </div>
+            <div class="drop-slot-content">
+                <span class="empty-slot-hint">Solte os 2 objetos em forma de pirâmide aqui</span>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn-check-all" onclick="checkAllSolids()">Verificar Organização dos Sólidos 🏆</button>
+    <div id="result-solids" class="result-box"></div>
+</div>
+
+<script>
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+    
+    function dragEnter(ev) { 
+        var box = ev.target.closest('.solid-box');
+        if(box) box.classList.add('drag-over'); 
+    }
+    
+    function dragLeave(ev) { 
+        var box = ev.target.closest('.solid-box');
+        if(box) box.classList.remove('drag-over'); 
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var draggedCard = document.getElementById(data);
+        if(!draggedCard) return;
+
+        var targetBox = ev.target.closest('.solid-box');
+        var pool = ev.target.closest('.objects-pool');
+
+        if (targetBox) {
+            var content = targetBox.querySelector('.drop-slot-content');
+            var hint = content.querySelector('.empty-slot-hint');
+            if (hint) hint.style.display = 'none';
+            content.appendChild(draggedCard);
+            targetBox.classList.remove('drag-over');
+        } else if (pool) {
+            pool.appendChild(draggedCard);
+        }
+
+        // Verifica se o pool ficou vazio ou se as caixas esvaziaram
+        document.querySelectorAll('.solid-box').forEach(box => {
+            var content = box.querySelector('.drop-slot-content');
+            var cards = content.querySelectorAll('.drag-card');
+            var hint = content.querySelector('.empty-slot-hint');
+            if (hint) {
+                hint.style.display = (cards.length === 0) ? 'block' : 'none';
+            }
+        });
+    }
+
+    function checkAllSolids() {
+        let total = 12; // 12 objects
+        let placedCount = 0;
+        let correctCount = 0;
+
+        document.querySelectorAll('.solid-box').forEach(box => {
+            const solidType = box.getAttribute('data-solid-type');
+            const cards = box.querySelectorAll('.drag-card');
+
+            cards.forEach(card => {
+                placedCount++;
+                const itemSolid = card.getAttribute('data-solid');
+                if (itemSolid === solidType) {
+                    correctCount++;
+                    card.style.borderColor = '#27ae60';
+                    card.style.backgroundColor = '#e8f8f5';
+                } else {
+                    card.style.borderColor = '#e74c3c';
+                    card.style.backgroundColor = '#fadbd8';
+                }
+            });
+        });
+
+        const res = document.getElementById('result-solids');
+        if (placedCount < total) {
+            res.textContent = `⚠️ Arraste todos os 12 objetos para as caixas antes de verificar! (Faltam ${total - placedCount})`;
+            res.style.color = "#d35400";
+        } else if (correctCount === total) {
+            res.textContent = "🎉 PERFEITO! Você classificou todos os 12 objetos em seus respectivos sólidos geométricos!";
+            res.style.color = "#27ae60";
+        } else {
+            res.textContent = `❌ Você acertou ${correctCount} de ${total} objetos. Corrija os itens em vermelho e tente novamente!`;
+            res.style.color = "#c0392b";
+        }
+    }
+</script>
+
+</body>
+</html>

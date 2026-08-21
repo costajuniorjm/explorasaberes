@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo 3: Números Ordinais & Corrida Maluca</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: #fdfbf7; color: #333; padding: 20px; }
+        .container { max-width: 1050px; margin: 0 auto; background: white; padding: 25px; border-radius: 14px; box-shadow: 0 6px 18px rgba(0,0,0,0.08); border-top: 6px solid #8e44ad; }
+        .header-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #ebdef0; }
+        .btn-back { background: #8e44ad; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        .btn-back:hover { background: #6c3483; }
+        h1 { color: #8e44ad; font-size: 1.8rem; }
+
+        /* TABS PARA OS DESAFIOS */
+        .tab-bar { display: flex; gap: 16px; margin-bottom: 25px; background: #f4ecf7; padding: 12px; border-radius: 14px; border: 3px solid #af7ac5; box-shadow: 0 4px 12px rgba(142,68,173,0.15); }
+        .tab-btn { flex: 1; padding: 16px 20px; font-size: 1.2rem; font-weight: 900; border: 3px solid #8e44ad; background: white; color: #8e44ad; border-radius: 10px; cursor: pointer; transition: all 0.25s ease; text-align: center; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 6px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .tab-btn:hover { background: #fbf8fc; transform: translateY(-3px); box-shadow: 0 6px 14px rgba(142,68,173,0.25); }
+        .tab-btn.active { background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%); color: white; border-color: #512e5f; transform: scale(1.02); box-shadow: 0 6px 16px rgba(142,68,173,0.35); }
+
+        .section-box { background: #fafafa; border: 2px solid #ebdef0; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .section-title { font-size: 1.25rem; color: #6c3483; margin-bottom: 12px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .instructions { background: #f4ecf7; padding: 12px; border-radius: 6px; margin-bottom: 18px; color: #512e5f; font-weight: 500; font-size: 0.95rem; line-height: 1.4; }
+
+        /* ================= DESAFIO 1: CORRIDA MALUCA ================= */
+        .race-track-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .racer-card { background: white; border: 2px solid #d2b4de; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 3px 6px rgba(0,0,0,0.05); transition: border-color 0.2s, transform 0.2s; }
+        .racer-card:hover { transform: translateY(-3px); border-color: #8e44ad; }
+        
+        .racer-header { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px dashed #ebdef0; }
+        .racer-badge { background: #8e44ad; color: white; font-weight: bold; padding: 4px 10px; border-radius: 20px; font-size: 1.1rem; }
+        .racer-name { font-weight: bold; color: #2c3e50; font-size: 1rem; }
+        
+        .racer-visual { font-size: 3.2rem; margin: 10px 0; line-height: 1; filter: drop-shadow(0 3px 5px rgba(0,0,0,0.15)); }
+
+        .racer-select { width: 100%; padding: 8px 10px; border-radius: 6px; border: 2px solid #8e44ad; font-weight: bold; font-size: 0.95rem; color: #512e5f; background: #fffdf9; margin-top: 8px; }
+
+        /* ================= DESAFIO 2: ARRASTAR E COMPLETAR AS LACUNAS ================= */
+        .ordinals-pool-card { background: #fbf8fc; border: 2px dashed #af7ac5; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+        .pool-title { font-weight: bold; font-size: 1.05rem; color: #512e5f; margin-bottom: 12px; text-align: center; }
+        .ordinals-pool { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; min-height: 80px; align-items: center; }
+
+        .drag-ordinal-badge { background: white; border: 2px solid #8e44ad; border-radius: 8px; padding: 8px 14px; font-size: 1rem; font-weight: bold; color: #512e5f; cursor: grab; user-select: none; box-shadow: 0 2px 5px rgba(0,0,0,0.08); transition: transform 0.15s, background 0.15s; }
+        .drag-ordinal-badge:active { cursor: grabbing; opacity: 0.6; }
+        .drag-ordinal-badge:hover { background: #f4ecf7; transform: scale(1.03); }
+
+        .sentences-list { display: flex; flex-direction: column; gap: 16px; }
+        .sentence-row-card { background: white; border: 2px solid #ebdef0; border-radius: 10px; padding: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 1.05rem; line-height: 1.5; color: #2c3e50; }
+        .sentence-row-card strong { color: #8e44ad; }
+
+        .drop-target-slot { display: inline-flex; align-items: center; justify-content: center; min-width: 90px; min-height: 42px; background: #fdfefe; border: 2px dashed #8e44ad; border-radius: 8px; padding: 4px 10px; vertical-align: middle; transition: background 0.2s; }
+        .drop-target-slot.drag-over { background: #ebdef0; border-style: solid; }
+
+        .btn-confirm { background: #27ae60; color: white; border: none; padding: 14px 28px; font-size: 1.15rem; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: background 0.2s; margin-top: 15px; }
+        .btn-confirm:hover { background: #219150; }
+
+        .feedback-box { margin-top: 15px; padding: 14px; border-radius: 8px; font-weight: bold; text-align: center; font-size: 1.1rem; display: none; line-height: 1.5; }
+        .feedback-box.success { background: #e8f8f5; color: #27ae60; border: 2px solid #2ecc71; }
+        .feedback-box.error { background: #fadbd8; color: #c0392b; border: 2px solid #e74c3c; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-nav">
+        <h1>🏁 Jogo 3: Números Ordinais & Corrida Maluca</h1>
+        <a href="index_matematica.html" class="btn-back">⬅ Voltar ao Portal de Matemática</a>
+    </div>
+
+    <!-- ABAS DOS DESAFIOS -->
+    <div class="tab-bar">
+        <button class="tab-btn active" id="tab-1" onclick="switchTab(1)">🚴 DESAFIO 1: Corrida Maluca</button>
+        <button class="tab-btn" id="tab-2" onclick="switchTab(2)">🧩 DESAFIO 2: Complete as Frases</button>
+    </div>
+
+    <!-- ================= DESAFIO 1: CORRIDA MALUCA DE ANIMAIS ================= -->
+    <div id="subgame-1">
+        <div class="section-box">
+            <div class="section-title">
+                <span>🚴 4. Escreva por extenso o número ordinal da classificação de cada competidor:</span>
+                <button onclick="reloadRace()" style="background:#8e44ad; color:white; border:none; padding:6px 14px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.85rem;">Sortear Novos Corredores 🎲</button>
+            </div>
+            <div class="instructions">
+                Os animais estão participando de uma incrível maratona ciclística! Observe a posição de chegada de cada competidor e escolha a escrita por extenso correta do número ordinal:
+            </div>
+
+            <div class="race-track-grid" id="race-grid"></div>
+
+            <button class="btn-confirm" onclick="checkRace()">Verificar Classificação dos Corredores 🏆</button>
+            <div class="feedback-box" id="feedback-msg-1"></div>
+        </div>
+    </div>
+
+    <!-- ================= DESAFIO 2: COMPLETE AS LACUNAS (ARRASTAR) ================= -->
+    <div id="subgame-2" style="display:none;">
+        <div class="section-box">
+            <div class="section-title">
+                <span>🧩 2. Arraste o número ordinal correto para completar cada situação-problema:</span>
+                <button onclick="loadRandomSentences()" style="background:#8e44ad; color:white; border:none; padding:6px 14px; border-radius:6px; font-weight:bold; cursor:pointer; font-size:0.85rem;">Sortear Novas 5 Questões 🎲</button>
+            </div>
+            <div class="instructions">
+                Leia atentamente cada frase com lógica de posição sucessora (+1) e arraste o número ordinal por extenso correspondente da área superior para a lacuna tracejada da frase!
+            </div>
+
+            <div class="ordinals-pool-card">
+                <div class="pool-title">🏷️ Numerais Ordinais Disponíveis (Arraste para a lacuna correta):</div>
+                <div class="ordinals-pool" id="pool" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+            </div>
+
+            <div class="sentences-list" id="sentences-container"></div>
+
+            <button class="btn-confirm" onclick="checkSentences()">Verificar Todas as Frases 🏆</button>
+            <div class="feedback-box" id="feedback-msg-2"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function switchTab(tabNum) {
+        document.getElementById('tab-1').classList.toggle('active', tabNum === 1);
+        document.getElementById('tab-2').classList.toggle('active', tabNum === 2);
+        document.getElementById('subgame-1').style.display = (tabNum === 1) ? 'block' : 'none';
+        document.getElementById('subgame-2').style.display = (tabNum === 2) ? 'block' : 'none';
+        if (tabNum === 2 && currentSentences.length === 0) {
+            loadRandomSentences();
+        }
+    }
+
+    // =========================================================================
+    // DESAFIO 1: CORRIDA MALUCA (BASEADO NA PÁGINA 1)
+    // =========================================================================
+    const racersBank = [
+        { name: "Leão Ciclista", emoji: "🦁🚲", num: 81, ordinal: "octogésimo primeiro" },
+        { name: "Macaco Veloz", emoji: "🐒🚲", num: 52, ordinal: "quinquagésimo segundo" },
+        { name: "Tigre Atleta", emoji: "🐅🚲", num: 63, ordinal: "sexagésimo terceiro" },
+        { name: "Panda Pedalante", emoji: "🐼🚲", num: 34, ordinal: "trigésimo quarto" },
+        { name: "Urso Corredor", emoji: "🐻🚲", num: 95, ordinal: "nonagésimo quinto" },
+        { name: "Girafa Ágil", emoji: "🦒🚲", num: 48, ordinal: "quadragésimo oitavo" },
+        { name: "Zebra Veloz", emoji: "🦓🚲", num: 76, ordinal: "septuagésimo sexto" },
+        { name: "Coelho Campeão", emoji: "🐰🚲", num: 27, ordinal: "vigésimo sétimo" },
+        { name: "Raposa Estrategista", emoji: "🦊🚲", num: 59, ordinal: "quinquagésimo nono" },
+        { name: "Elefante Forte", emoji: "🐘🚲", num: 83, ordinal: "octogésimo terceiro" }
+    ];
+
+    let currentRacers = [];
+
+    function reloadRace() {
+        const shuffled = [...racersBank].sort(() => 0.5 - Math.random());
+        currentRacers = shuffled.slice(0, 6); // 6 competidores por rodada como na imagem
+
+        const container = document.getElementById('race-grid');
+        container.innerHTML = "";
+        document.getElementById('feedback-msg-1').style.display = 'none';
+
+        const allOptions = [
+            "octogésimo primeiro", "quinquagésimo segundo", "sexagésimo terceiro",
+            "trigésimo quarto", "nonagésimo quinto", "quadragésimo oitavo",
+            "septuagésimo sexto", "vigésimo sétimo", "quinquagésimo nono",
+            "octogésimo terceiro", "septuagésimo quarto", "octogésimo sexto"
+        ];
+
+        currentRacers.forEach((racer, idx) => {
+            const card = document.createElement('div');
+            card.className = 'racer-card';
+            card.id = `rcard-${idx}`;
+
+            // Gera opções para o select (a correta + 3 distratores aleatórios)
+            const options = [racer.ordinal];
+            const remaining = allOptions.filter(o => o !== racer.ordinal).sort(() => 0.5 - Math.random()).slice(0, 3);
+            const cardOptions = [...options, ...remaining].sort(() => 0.5 - Math.random());
+
+            let selectHTML = `<select class="racer-select" id="rsel-${idx}" data-correct="${racer.ordinal}">
+                <option value="">[ Selecione por extenso ]</option>`;
+            cardOptions.forEach(opt => {
+                selectHTML += `<option value="${opt}">${opt}</option>`;
+            });
+            selectHTML += `</select>`;
+
+            card.innerHTML = `
+                <div class="racer-header">
+                    <span class="racer-badge">${racer.num}º Lugar</span>
+                    <span class="racer-name">${racer.name}</span>
+                </div>
+                <div class="racer-visual">${racer.emoji}</div>
+                ${selectHTML}
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    function checkRace() {
+        let score = 0;
+        let total = currentRacers.length;
+        let anyEmpty = false;
+
+        currentRacers.forEach((racer, idx) => {
+            const sel = document.getElementById(`rsel-${idx}`);
+            const card = document.getElementById(`rcard-${idx}`);
+
+            if (sel.value === "") {
+                anyEmpty = true;
+                card.style.borderColor = '#d2b4de';
+                card.style.backgroundColor = 'white';
+            } else if (sel.value === racer.ordinal) {
+                score++;
+                card.style.borderColor = '#27ae60';
+                card.style.backgroundColor = '#e8f8f5';
+            } else {
+                card.style.borderColor = '#e74c3c';
+                card.style.backgroundColor = '#fadbd8';
+            }
+        });
+
+        if (anyEmpty) {
+            alert("Por favor, preencha o número ordinal de todos os 6 corredores antes de verificar!");
+            return;
+        }
+
+        const fb = document.getElementById('feedback-msg-1');
+        if (score === total) {
+            fb.className = 'feedback-box success';
+            fb.innerHTML = `🎉 ESPETACULAR! Você acertou a escrita por extenso de todos os ${total} competidores da Corrida Maluca!`;
+            fb.style.display = 'block';
+        } else {
+            fb.className = 'feedback-box error';
+            fb.innerHTML = `❌ Você acertou ${score} de ${total} posições. Observe as caixas em vermelho e tente novamente!`;
+            fb.style.display = 'block';
+        }
+    }
+
+    // =========================================================================
+    // DESAFIO 2: COMPLETE AS LACUNAS (BASEADO NA PÁGINA 2)
+    // =========================================================================
+    const sentencesBank = [
+        { 
+            text: "No teste de seleção de uma escola de artes marciais, <strong>73 alunos</strong> classificaram-se em uma posição melhor do que a minha. Logo, eu fiquei no",
+            after: "lugar.",
+            correctOrdinal: "74º",
+            idVal: "74"
+        },
+        { 
+            text: "Já chegaram à escola <strong>85 alunos</strong>. O próximo a chegar será o",
+            after: "aluno.",
+            correctOrdinal: "86º",
+            idVal: "86"
+        },
+        { 
+            text: "Já receberam seus salários <strong>146 trabalhadores</strong>. O próximo a receber será o",
+            after: "trabalhador.",
+            correctOrdinal: "147º",
+            idVal: "147"
+        },
+        { 
+            text: "Em um torneio de natação, <strong>51 atletas</strong> cruzaram a linha de chegada na minha frente. Eu fui o",
+            after: "nadador a concluir a prova.",
+            correctOrdinal: "52º",
+            idVal: "52"
+        },
+        { 
+            text: "Foram vendidos <strong>99 ingressos</strong> para o cinema. O próximo cliente comprará o",
+            after: "ingresso.",
+            correctOrdinal: "100º",
+            idVal: "100"
+        },
+        { 
+            text: "Na maratona da cidade, <strong>62 corredores</strong> já ultrapassaram a marca dos 20km. O próximo corredor será o",
+            after: "maratonista.",
+            correctOrdinal: "63º",
+            idVal: "63"
+        },
+        { 
+            text: "Uma fila do banco já atendeu <strong>33 pessoas</strong>. A próxima pessoa chamada na senha será a",
+            after: "atendida.",
+            correctOrdinal: "34ª",
+            idVal: "34"
+        },
+        { 
+            text: "Em um concurso de desenho, <strong>47 crianças</strong> entregaram seus trabalhos. O próximo inscrito será o",
+            after: "participante.",
+            correctOrdinal: "48º",
+            idVal: "48"
+        },
+        { 
+            text: "Um condomínio já entregou as chaves de <strong>129 apartamentos</strong>. O próximo morador a receber será o",
+            after: "proprietário.",
+            correctOrdinal: "130º",
+            idVal: "130"
+        },
+        { 
+            text: "Na corrida de kart, <strong>94 voltas</strong> já foram completadas pelo líder. Ele agora iniciará a",
+            after: "volta.",
+            correctOrdinal: "95ª",
+            idVal: "95"
+        }
+    ];
+
+    let currentSentences = [];
+
+    function loadRandomSentences() {
+        const shuffled = [...sentencesBank].sort(() => 0.5 - Math.random());
+        currentSentences = shuffled.slice(0, 5); // 5 questões aleatórias
+
+        // Renderiza as frases com slots
+        const container = document.getElementById('sentences-container');
+        container.innerHTML = "";
+        document.getElementById('feedback-msg-2').style.display = 'none';
+
+        const letters = ['a', 'b', 'c', 'd', 'e'];
+
+        currentSentences.forEach((item, idx) => {
+            const card = document.createElement('div');
+            card.className = 'sentence-row-card';
+            card.id = `scard-${idx}`;
+            card.innerHTML = `
+                <span>${letters[idx]}) ${item.text}</span>
+                <div class="drop-target-slot" id="slot-${idx}" ondrop="drop(event)" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" data-expected="${item.idVal}">
+                    <span style="font-size:0.85rem; color:#95a5a6;">[ Arraste o ordinal aqui ]</span>
+                </div>
+                <span>${item.after}</span>
+            `;
+            container.appendChild(card);
+        });
+
+        // Gera e embaralha os badges no pool
+        const pool = document.getElementById('pool');
+        pool.innerHTML = "";
+        const badges = currentSentences.map(s => ({ text: s.correctOrdinal, idVal: s.idVal }));
+        
+        // Adiciona 2 distratores extras no pool para deixar o desafio ainda mais interessante
+        const extras = [
+            { text: "73º", idVal: "73_fake" },
+            { text: "85º", idVal: "85_fake" },
+            { text: "146º", idVal: "146_fake" }
+        ].sort(() => 0.5 - Math.random()).slice(0, 2);
+
+        const allBadges = [...badges, ...extras].sort(() => 0.5 - Math.random());
+
+        allBadges.forEach((bObj, bIdx) => {
+            const badge = document.createElement('div');
+            badge.className = 'drag-ordinal-badge';
+            badge.draggable = true;
+            badge.id = `badge-${bIdx}`;
+            badge.setAttribute('data-idval', bObj.idVal);
+            badge.textContent = bObj.text;
+            badge.ondragstart = drag;
+            pool.appendChild(badge);
+        });
+    }
+
+    // Drag and Drop handlers
+    function allowDrop(ev) { ev.preventDefault(); }
+    function drag(ev) { ev.dataTransfer.setData("text", ev.target.id); }
+
+    function dragEnter(ev) {
+        const slot = ev.target.closest('.drop-target-slot');
+        if (slot) slot.classList.add('drag-over');
+    }
+
+    function dragLeave(ev) {
+        const slot = ev.target.closest('.drop-target-slot');
+        if (slot) slot.classList.remove('drag-over');
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        const data = ev.dataTransfer.getData("text");
+        const draggedBadge = document.getElementById(data);
+        if (!draggedBadge) return;
+
+        const targetSlot = ev.target.closest('.drop-target-slot');
+        const pool = ev.target.closest('.ordinals-pool');
+
+        if (targetSlot) {
+            targetSlot.classList.remove('drag-over');
+            // Se já tiver um badge dentro, move ele de volta para o pool
+            const existingBadge = targetSlot.querySelector('.drag-ordinal-badge');
+            if (existingBadge && existingBadge !== draggedBadge) {
+                document.getElementById('pool').appendChild(existingBadge);
+            }
+            targetSlot.innerHTML = "";
+            targetSlot.appendChild(draggedBadge);
+        } else if (pool) {
+            pool.appendChild(draggedBadge);
+        }
+    }
+
+    function checkSentences() {
+        let score = 0;
+        let total = currentSentences.length;
+        let placedCount = 0;
+
+        currentSentences.forEach((item, idx) => {
+            const slot = document.getElementById(`slot-${idx}`);
+            const card = document.getElementById(`scard-${idx}`);
+            const placedBadge = slot.querySelector('.drag-ordinal-badge');
+
+            if (placedBadge) {
+                placedCount++;
+                const placedVal = placedBadge.getAttribute('data-idval');
+                if (placedVal === item.idVal) {
+                    score++;
+                    card.style.borderColor = '#27ae60';
+                    card.style.backgroundColor = '#e8f8f5';
+                } else {
+                    card.style.borderColor = '#e74c3c';
+                    card.style.backgroundColor = '#fadbd8';
+                }
+            } else {
+                card.style.borderColor = '#ebdef0';
+                card.style.backgroundColor = 'white';
+            }
+        });
+
+        if (placedCount < total) {
+            alert(`Por favor, preencha as ${total} lacunas arrastando os ordinais antes de verificar! (Faltam ${total - placedCount})`);
+            return;
+        }
+
+        const fb = document.getElementById('feedback-msg-2');
+        if (score === total) {
+            fb.className = 'feedback-box success';
+            fb.innerHTML = `🎉 PERFEITO! Você completou todas as 5 situações-problema com os números ordinais corretos!`;
+            fb.style.display = 'block';
+        } else {
+            fb.className = 'feedback-box error';
+            fb.innerHTML = `❌ Você acertou ${score} de ${total} frases. Corrija as frases em vermelho e tente novamente!`;
+            fb.style.display = 'block';
+        }
+    }
+
+    // Inicialização
+    reloadRace();
+</script>
+
+</body>
+</html>
